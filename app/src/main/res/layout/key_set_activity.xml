@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_title_navigation" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#333333" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="266dp"
+            android:layout_height="316dp"
+            android:background="@drawable/bg_menu">
+
+
+            <LinearLayout
+                android:id="@+id/ll_main_device"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="95dp"
+                android:background="@drawable/ic_device"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_power"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="17dp"
+                    android:src="@drawable/ic_ble_unconnect" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_mode"
+                android:layout_width="90dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/ll_main_device"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_memu"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_mode"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="38dp"
+                    android:src="@drawable/ic_menu_mode" />
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/iv_menu_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="80dp"
+                android:layout_marginLeft="50dp"
+                android:src="@drawable/ic_menu_record" />
+
+            <ImageView
+                android:id="@+id/iv_menu_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="80dp"
+                android:layout_marginRight="50dp"
+                android:src="@drawable/ic_memu_camera" />
+
+            <Button
+                android:id="@+id/btn_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="asdfafdas" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

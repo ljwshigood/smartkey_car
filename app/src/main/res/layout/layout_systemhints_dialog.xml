@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/layout_systemhintsdialog_tv_hint_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textColor="@color/confirmblack"
+            android:textSize="14sp"
+            tools:text="password_reset_success" />
+    </LinearLayout>
+
+    <View
+        style="@style/h_splite_line"
+        android:layout_width="match_parent"
+        android:background="@color/dark_complete" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp">
+
+        <LinearLayout
+            android:id="@+id/layout_systemhintsdialog_ll_nag"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/layout_systemhintsdialog_tv_nag"
+                style="@style/textstyle_dark_16sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:text="Cancel" />
+
+            <View
+                style="@style/v_splite_line"
+                android:layout_height="match_parent"
+                android:background="@color/dark_complete" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/layout_systemhintsdialog_tv_pos"
+            style="@style/textstyle_pink_16sp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:text="confirm" />
+    </LinearLayout>
+</LinearLayout>
