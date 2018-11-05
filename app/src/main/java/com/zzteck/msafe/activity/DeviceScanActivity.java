@@ -241,33 +241,23 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 					return ;
 				}
 
-				SystemHintsDialog_dialog mSystemDialog  = new SystemHintsDialog_dialog(mContext,"确定要配对吗",mContext.getString(R.string.cancel),mContext.getString(R.string.ok),0);
-				mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
-					@Override
-					public void dialogOk() {
+				if(mLeDeviceListAdapter.getItem(position) instanceof  DeviceSetInfo){
 
-						/*final Category device = */mLeDeviceListAdapter.getItem(position);
-						Log.e("liujw","##########################device : onItemClick : "+mLeDeviceListAdapter.getItem(position)) ;
-						/*if (device == null)
-							return;
-						if (AppContext.mBluetoothLeService != null) {
-							AppContext.mBluetoothLeService.connect(device.getAddress());
-						}*/
-						showProgressBarDialog();
-					}
-				});
-				mSystemDialog.show();
+					SystemHintsDialog_dialog mSystemDialog  = new SystemHintsDialog_dialog(mContext,"确定要配对吗",mContext.getString(R.string.cancel),mContext.getString(R.string.ok),0);
+					mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
+						@Override
+						public void dialogOk() {
 
-				//final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-				/*final Category device = mLeDeviceListAdapter.getItem(position);
-				mDevice = device;
-				if (device == null)
-					return;
-				if (AppContext.mBluetoothLeService != null) {
-					AppContext.mBluetoothLeService.connect(device.getAddress());
-				}*/
-				//showProgressBarDialog();
-				//isConnectedTimeout();
+							DeviceSetInfo deviceSetInfo = (DeviceSetInfo) mLeDeviceListAdapter.getItem(position);
+							if (deviceSetInfo == null)
+								return;
+							if (AppContext.mBluetoothLeService != null) {
+								AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
+							}
+							showProgressBarDialog();
+						}
+					});
+				}
 			}
 		}) ;
 
@@ -282,15 +272,16 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			AppContext.mBluetoothLeService.setmIDismissListener(this);
 		}
 
-		mLeDeviceListAdapter.notifyCategoryList(getData());
-		/*ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(mContext).selectDeviceInfo() ;
+		//mLeDeviceListAdapter.notifyCategoryList(getData());
+
+		ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(mContext).selectDeviceInfo() ;
 		if(deviceList != null && deviceList.size() > 0){
 			for(int i = 0 ;i < deviceList.size() ;i++){
 				mCategoryDataabase.addItem(deviceList.get(i)) ;
 			}
 			listData.add(mCategoryDataabase) ;
 			mLeDeviceListAdapter.notifyDataSetChanged();
-		}*/
+		}
 
 	}
 

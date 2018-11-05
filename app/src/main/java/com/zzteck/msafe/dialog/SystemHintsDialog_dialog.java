@@ -88,16 +88,16 @@ public class SystemHintsDialog_dialog extends Dialog {
         tvNagtive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIDialogListener != null){
-                    mIDialogListener.dialogOk();
-                }
                 dismiss();
             }
         });
         tvPositive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    dismiss();
+                if(mIDialogListener != null){
+                    mIDialogListener.dialogOk();
+                }
+                dismiss();
             }
         });
         if (resid != 0) {
