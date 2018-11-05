@@ -136,6 +136,7 @@
             </intent-filter>
             -->
         </activity>
+        <activity android:name=".activity.DeviceInfoActivity"></activity>
         <activity android:name=".activity.FeedBackActivity"></activity>
         <activity android:name=".activity.AboutMeActivity"></activity>
         <activity

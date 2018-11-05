@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.activity.AboutMeActivity;
 import com.zzteck.msafe.activity.DeviceDisplayActivity;
+import com.zzteck.msafe.activity.DeviceInfoActivity;
 import com.zzteck.msafe.activity.FeedBackActivity;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.SharePerfenceUtil;
@@ -89,7 +90,7 @@ public class NavPopWindows extends PopupWindow implements View.OnClickListener{
 		Intent intent = null ;
 		switch (v.getId()){
 			case R.id.ll_device_list :
-				intent = new Intent(mContext, DeviceDisplayActivity.class) ;
+				intent = new Intent(mContext, DeviceInfoActivity.class) ;
 				mContext.startActivity(intent) ;
 				break ;
 			case R.id.ll_update :

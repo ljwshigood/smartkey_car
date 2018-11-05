@@ -65,7 +65,7 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 
 	private int[] res = new int[] { R.drawable.camera,R.drawable.ic_sos_press,
 			R.drawable.ic_light_press, R.drawable.ic_call_press,R.drawable.ic_open_app_press,
-			R.drawable.ic_speed };
+			R.drawable.ic_speed ,R.drawable.ic_alarm,R.drawable.ic_anti_call};
 
 	private String[] info = null;
 
@@ -75,7 +75,9 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 				mContext.getString(R.string.light),
 				mContext.getString(R.string.call),
 				mContext.getString(R.string.open_app),
-				mContext.getString(R.string.speed) };
+				mContext.getString(R.string.speed),
+				mContext.getString(R.string.alarm),
+				mContext.getString(R.string.anti_call)};
 
 		mFunctionAdapter = new FunctionAdapter(mContext, res, info);
 		mGvFunction.setAdapter(mFunctionAdapter);
@@ -115,6 +117,12 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 						mDatabaseManager.editorKeySet(mKeySetBean);
 						finish();
 						break;
+					case 6:
+
+						break ;
+					case 7:
+						showWindows(2);
+						break ;
 				}
 			}
 		});

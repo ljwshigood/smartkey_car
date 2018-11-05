@@ -54,11 +54,11 @@ public class RecordMenuActivity extends BaseActivity implements
 
 	private RecordMenuAdapter mMenuAdapter;
 
-	Handler mHandler = new Handler();
+	private Handler mHandler = new Handler();
 
 	private Context mContext;
 
-	AudioManager audioManager = null;
+	private AudioManager audioManager = null;
 
 	private CheckBox mCbPlayStatus;
 
@@ -114,6 +114,7 @@ public class RecordMenuActivity extends BaseActivity implements
 		String scanFilePath = Environment.getExternalStorageDirectory()+ "/YYT";
 		mMusicList = FileUtil.getRecordFiles(scanFilePath);
 		mMenuAdapter = new RecordMenuAdapter(mContext, mMusicList, this,this);
+		mLvRecordPlay.setVisibility(View.INVISIBLE);
 		mLvRecordPlay.setAdapter(mMenuAdapter);
 		mLvRecordPlay.setOnItemClickListener(mMenuAdapter);
 		

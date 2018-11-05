@@ -164,8 +164,8 @@ public class RecordActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.iv_record_menu:
 			if(mMediaStatusCode == -1){
-				/*Intent intent = new Intent(mContext, RecordMenuActivity.class);
-				startActivity(intent);*/
+				Intent intent = new Intent(mContext, RecordMenuActivity.class);
+				startActivity(intent);
 				return ;
 			}else if(mMediaStatusCode != 2 && !isSave){
 				saveRecord();
@@ -174,18 +174,18 @@ public class RecordActivity extends Activity implements OnClickListener {
 				Log.e("liujw","#################saveRecord");
 				return ;
 			}else if(isSave){
-				/*Intent intent = new Intent(mContext, RecordMenuActivity.class);
-				startActivity(intent);*/
+				Intent intent = new Intent(mContext, RecordMenuActivity.class);
+				startActivity(intent);
 				Log.e("liujw","#################RecordMenuActivity");
 				return ;
 			}
 			
-			/*if (!isSave) {
+			if (!isSave) {
 				saveRecord();
 			} else {
 				Intent intent = new Intent(mContext, RecordMenuActivity.class);
 				startActivity(intent);
-			}*/
+			}
 			break;
 		case R.id.cb_record:
 			if(mMediaStatusCode == -1){

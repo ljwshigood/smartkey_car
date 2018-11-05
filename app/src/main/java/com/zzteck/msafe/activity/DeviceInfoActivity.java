@@ -1,18 +1,5 @@
 package com.zzteck.msafe.activity;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -34,8 +21,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -62,7 +47,6 @@ import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
-import com.zzteck.msafe.util.BlueGattManager;
 import com.zzteck.msafe.util.ImageTools;
 import com.zzteck.msafe.util.LocationUtils;
 import com.zzteck.msafe.view.FollowEditDialog;
@@ -70,7 +54,15 @@ import com.zzteck.msafe.view.FollowEditDialog.ICallbackUpdateView;
 import com.zzteck.msafe.view.FollowInfoDialog;
 import com.zzteck.msafe.view.SelectPicPopupWindow;
 
-public class DeviceDisplayActivity extends BaseActivity implements OnClickListener, ICallbackUpdateView {
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+public class DeviceInfoActivity extends BaseActivity implements OnClickListener, ICallbackUpdateView {
 
 	private ImageView mIvAddDevice;
 
@@ -119,7 +111,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 									editor.putBoolean("switch", false);
 									editor.commit();
 								}
-								DeviceDisplayActivity.this.setShakeConfig();
+								DeviceInfoActivity.this.setShakeConfig();
 							}
 						})
 				.setNegativeButton(mContext.getString(R.string.alarm_cancel),
@@ -215,7 +207,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 	public void editNameDialog() {
 		FollowEditDialog dialog = new FollowEditDialog(mContext,
 				R.style.MyDialog, mContext.getString(R.string.set_name),
-				mDeviceSetInfo, mDeviceAddress, DeviceDisplayActivity.this);
+				mDeviceSetInfo, mDeviceAddress, DeviceInfoActivity.this);
 		dialog.show();
 
 	}
@@ -237,7 +229,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_device);
+		setContentView(R.layout.activity_device_info);
 		mDatabaseManager = DatabaseManager.getInstance(mContext);
 		mAlarmManager = AlarmManager.getInstance(mContext);
 
@@ -253,7 +245,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 			finish();
 			return;
 		}
-		mContext = DeviceDisplayActivity.this;
+		mContext = DeviceInfoActivity.this;
 		mDeviceSetInfo = mDatabaseManager.selectSingleDeviceInfo();
 
 		initView();
@@ -562,7 +554,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 	private String mFilePath;
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUESTCODE && resultCode == DeviceDisplayActivity.RESULT_ADRESS) {
+		if (requestCode == REQUESTCODE && resultCode == DeviceInfoActivity.RESULT_ADRESS) {
 			mDeviceSetInfo = mDatabaseManager.selectSingleDeviceInfo();
 			initView();
 			if (mDeviceSetInfo != null) {
@@ -632,7 +624,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 
 	private void showWindows(int type) {
 
-		menuWindow = new SelectPicPopupWindow(DeviceDisplayActivity.this,
+		menuWindow = new SelectPicPopupWindow(DeviceInfoActivity.this,
 				itemsOnClick, type);
 		menuWindow.showAtLocation(this.findViewById(R.id.main), Gravity.BOTTOM
 				| Gravity.CENTER_HORIZONTAL, 0, 0);
