@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,15 +43,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zzteck.msafe.R;
+import com.zzteck.msafe.adapter.CategoryAdapter;
 import com.zzteck.msafe.application.AppContext;
+import com.zzteck.msafe.bean.Category;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.bean.SoundInfo;
 import com.zzteck.msafe.db.DatabaseManager;
+import com.zzteck.msafe.dialog.SystemHintsDialog_dialog;
 import com.zzteck.msafe.impl.IDismissListener;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
 import com.zzteck.msafe.view.FollowProgressDialog;
+import com.zzteck.msafe.view.SystemHintsDialog;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -58,7 +63,9 @@ import com.zzteck.msafe.view.FollowProgressDialog;
 @SuppressLint("NewApi")
 public class DeviceScanActivity extends Activity implements OnClickListener ,IDismissListener{
 
-	private LeDeviceListAdapter mLeDeviceListAdapter;
+	//private LeDeviceListAdapter mLeDeviceListAdapter;
+	private CategoryAdapter mLeDeviceListAdapter ;
+
 	private BluetoothAdapter mBluetoothAdapter;
 	private boolean mScanning;
 	private Handler mHandler;
@@ -117,6 +124,74 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 
 	private AlarmManager mAlarmManager;
 
+	private Category mCategoryDataabase ,mCategoryScanner ;
+
+
+	private ArrayList<Category> getData() {
+
+		ArrayList<Category> listData = new ArrayList<Category>();
+		Category categoryOne = new Category("路人甲");
+		DeviceSetInfo deviceSetInfo = new DeviceSetInfo() ;
+		deviceSetInfo.setmDeviceName("马三立");
+		categoryOne.addItem(deviceSetInfo);
+		DeviceSetInfo deviceSetInfo1 = new DeviceSetInfo() ;
+		deviceSetInfo1.setmDeviceName("赵本山");
+		categoryOne.addItem(deviceSetInfo1);
+
+		DeviceSetInfo deviceSetInfo2 = new DeviceSetInfo() ;
+		deviceSetInfo2.setmDeviceName("赵本山");
+
+		categoryOne.addItem(deviceSetInfo2);
+
+		DeviceSetInfo deviceSetInfo3 = new DeviceSetInfo() ;
+		deviceSetInfo3.setmDeviceName("周立波");
+
+		categoryOne.addItem(deviceSetInfo3);
+
+		Category categoryTwo = new Category("事件乙");
+
+		DeviceSetInfo deviceSetInfo4 = new DeviceSetInfo() ;
+		deviceSetInfo4.setmDeviceName("**贪污");
+
+		categoryTwo.addItem(deviceSetInfo4);
+
+		DeviceSetInfo deviceSetInfo5 = new DeviceSetInfo() ;
+		deviceSetInfo5.setmDeviceName("**照门");
+
+		categoryTwo.addItem(deviceSetInfo5);
+		/*
+		Category categoryThree = new Category("书籍丙");
+		categoryThree.addItem("10天学会***");
+		categoryThree.addItem("**大全");
+		categoryThree.addItem("**秘籍");
+		categoryThree.addItem("**宝典");
+		categoryThree.addItem("10天学会***");
+		categoryThree.addItem("10天学会***");
+		categoryThree.addItem("10天学会***");
+		categoryThree.addItem("10天学会***");
+		Category categoryFour = new Category("书籍丙");
+		categoryFour.addItem("河南");
+		categoryFour.addItem("天津");
+		categoryFour.addItem("北京");
+		categoryFour.addItem("上海");
+		categoryFour.addItem("广州");
+		categoryFour.addItem("湖北");
+		categoryFour.addItem("重庆");
+		categoryFour.addItem("山东");
+		categoryFour.addItem("陕西");*/
+
+		listData.add(categoryOne);
+		listData.add(categoryTwo);
+		/*listData.add(categoryThree);
+		listData.add(categoryFour);*/
+
+		return listData;
+	}
+
+
+	private ArrayList<Category> listData = new ArrayList<Category>();
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -146,11 +221,55 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 
 		setContentView(R.layout.activity_device_scan);
 		mLvBlueDevice = (ListView) findViewById(R.id.lv_scan_device);
-		mContext = this;
+		mContext = this ;
+
+		mCategoryDataabase = new Category("已连接设备") ;
+		mCategoryScanner = new Category("扫描设备") ;
+
 		// Initializes list view adapter.
-		mLeDeviceListAdapter = new LeDeviceListAdapter();
+		/*mLeDeviceListAdapter = new LeDeviceListAdapter();
 		mLvBlueDevice.setAdapter(mLeDeviceListAdapter);
-		mLvBlueDevice.setOnItemClickListener(mLeDeviceListAdapter);
+		mLvBlueDevice.setOnItemClickListener(mLeDeviceListAdapter);*/
+
+		mLeDeviceListAdapter = new CategoryAdapter(mContext,listData) ;
+		mLvBlueDevice.setAdapter(mLeDeviceListAdapter) ;
+		mLvBlueDevice.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
+				if(AppContext.mHashMapConnectGatt.size() > 0){
+					Toast.makeText(mContext, mContext.getString(R.string.already_one_device_conncect), 1).show();
+					return ;
+				}
+
+				SystemHintsDialog_dialog mSystemDialog  = new SystemHintsDialog_dialog(mContext,"确定要配对吗",mContext.getString(R.string.cancel),mContext.getString(R.string.ok),0);
+				mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
+					@Override
+					public void dialogOk() {
+
+						/*final Category device = */mLeDeviceListAdapter.getItem(position);
+						Log.e("liujw","##########################device : onItemClick : "+mLeDeviceListAdapter.getItem(position)) ;
+						/*if (device == null)
+							return;
+						if (AppContext.mBluetoothLeService != null) {
+							AppContext.mBluetoothLeService.connect(device.getAddress());
+						}*/
+						showProgressBarDialog();
+					}
+				});
+				mSystemDialog.show();
+
+				//final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+				/*final Category device = mLeDeviceListAdapter.getItem(position);
+				mDevice = device;
+				if (device == null)
+					return;
+				if (AppContext.mBluetoothLeService != null) {
+					AppContext.mBluetoothLeService.connect(device.getAddress());
+				}*/
+				//showProgressBarDialog();
+				//isConnectedTimeout();
+			}
+		}) ;
 
 		mAlarmManager = AlarmManager.getInstance(mContext);
 		initView();
@@ -162,6 +281,17 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		if(AppContext.mBluetoothLeService != null){
 			AppContext.mBluetoothLeService.setmIDismissListener(this);
 		}
+
+		mLeDeviceListAdapter.notifyCategoryList(getData());
+		/*ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(mContext).selectDeviceInfo() ;
+		if(deviceList != null && deviceList.size() > 0){
+			for(int i = 0 ;i < deviceList.size() ;i++){
+				mCategoryDataabase.addItem(deviceList.get(i)) ;
+			}
+			listData.add(mCategoryDataabase) ;
+			mLeDeviceListAdapter.notifyDataSetChanged();
+		}*/
+
 	}
 
 	private View mView;
@@ -312,7 +442,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		finish();
 	}
 
-	private class LeDeviceListAdapter extends BaseAdapter implements OnItemClickListener {
+	/*private class LeDeviceListAdapter extends BaseAdapter implements OnItemClickListener {
 
 		private LayoutInflater mInflator;
 
@@ -393,14 +523,13 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			showProgressBarDialog();
 			//isConnectedTimeout();
 		}
-	}
+	}*/
 
 	public FollowProgressDialog mDialogProgress = null;
 
 	private void showProgressBarDialog() {
 		String info = mContext.getString(R.string.device_connected_title);
-		mDialogProgress = new FollowProgressDialog(mContext, R.style.MyDialog,
-				info);
+		mDialogProgress = new FollowProgressDialog(mContext, R.style.MyDialog,info);
 		mDialogProgress.show();
 	}
 
@@ -413,19 +542,41 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					
 					mLvBlueDevice.setVisibility(View.VISIBLE);
-					mLLInfo.setVisibility(View.GONE);
-					mLeDeviceListAdapter.addDevice(device);
-					mLeDeviceListAdapter.notifyDataSetChanged();
-					
+					mLLInfo.setVisibility(View.GONE) ;
+					/*if(TextUtils.isEmpty(device.getName())){
+						return ;
+					}*/
+				/*	if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0){
+						List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
+						boolean isExist = false ;
+						for(int i = 0 ;i < list.size();i++){
+							String address = list.get(i).getmDeviceAddress() ;
+							if(address.equals(device.getAddress())){
+								isExist = true ;
+							}
+						}
+						if(!isExist){
+							DeviceSetInfo bean = new DeviceSetInfo() ;
+							bean.setmDeviceAddress(device.getAddress()) ;
+							bean.setmDeviceName(device.getName()) ;
+							mCategoryScanner.addItem(bean) ;
+							mLeDeviceListAdapter.notifyDataSetChanged();
+						}
+					}else{
+						DeviceSetInfo bean = new DeviceSetInfo() ;
+						bean.setmDeviceAddress(device.getAddress()) ;
+						bean.setmDeviceName(device.getName()) ;
+						mCategoryScanner.addItem(bean) ;
+						listData.add(mCategoryScanner) ;
+						mLeDeviceListAdapter.notifyDataSetChanged();
+					}*/
+
 				}
 			});
 		}
 	};
 	
-	
-
 	public boolean iteraGattHashMap(Map map, String address) {
 		Iterator iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
