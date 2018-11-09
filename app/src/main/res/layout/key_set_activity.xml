@@ -28,7 +28,7 @@
             <RelativeLayout
                 android:layout_width="266dp"
                 android:layout_height="313dp"
-                android:background="@drawable/ic_launcher_icon">
+                android:background="@drawable/ic_launcher">
 
 
                 <LinearLayout
@@ -101,7 +101,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="70"
-            android:background="@drawable/bg_banner">
+            android:background="@color/blue_dark"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="94dp"
+                android:src="@drawable/bg_banner_info" />
         </LinearLayout>
     </LinearLayout>
 

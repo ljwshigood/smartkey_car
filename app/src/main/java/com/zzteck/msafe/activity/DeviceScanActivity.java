@@ -227,6 +227,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		mCategoryScanner = new Category("扫描设备") ;
 
 		// Initializes list view adapter.
+
 		/*mLeDeviceListAdapter = new LeDeviceListAdapter();
 		mLvBlueDevice.setAdapter(mLeDeviceListAdapter);
 		mLvBlueDevice.setOnItemClickListener(mLeDeviceListAdapter);*/
@@ -242,13 +243,11 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				}
 
 				if(mLeDeviceListAdapter.getItem(position) instanceof  DeviceSetInfo){
-
-					SystemHintsDialog_dialog mSystemDialog  = new SystemHintsDialog_dialog(mContext,"确定要配对吗",mContext.getString(R.string.cancel),mContext.getString(R.string.ok),0);
+					final DeviceSetInfo deviceSetInfo = (DeviceSetInfo) mLeDeviceListAdapter.getItem(position);
+					SystemHintsDialog_dialog mSystemDialog  = new SystemHintsDialog_dialog(mContext,"要与"+deviceSetInfo.getmDeviceName()+"配对吗",mContext.getString(R.string.cancel),mContext.getString(R.string.ok),0);
 					mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
 						@Override
 						public void dialogOk() {
-
-							DeviceSetInfo deviceSetInfo = (DeviceSetInfo) mLeDeviceListAdapter.getItem(position);
 							if (deviceSetInfo == null)
 								return;
 							if (AppContext.mBluetoothLeService != null) {
@@ -266,7 +265,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 
 		delayHandler = new Handler();
 
-		setTitle(mContext.getString(R.string.device_scanning));
+		setTitle(mContext.getString(R.string.device_list));
 		
 		if(AppContext.mBluetoothLeService != null){
 			AppContext.mBluetoothLeService.setmIDismissListener(this);
@@ -298,13 +297,17 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	private LinearLayout mLLInfo ;
 
 	private RelativeLayout mRlTitle ;
+
+	private LinearLayout mLlRefresh ;
 	
 	private void initView() {
+		mLlRefresh = (LinearLayout)findViewById(R.id.ll_refresh) ;
 		mRlTitle = (RelativeLayout)findViewById(R.id.rl_title);
 		mRlTitle.setBackgroundResource(R.drawable.bg_scanning);
 		mLLInfo = (LinearLayout)findViewById(R.id.ll_info);
 		mIvBack = (ImageView) findViewById(R.id.iv_back);
 		mIvBack.setOnClickListener(this);
+		mLlRefresh.setOnClickListener(this);
 	}
 
 	@Override
@@ -535,10 +538,10 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				public void run() {
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
-					/*if(TextUtils.isEmpty(device.getName())){
+					if(TextUtils.isEmpty(device.getName())){
 						return ;
-					}*/
-				/*	if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0){
+					}
+					if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0){
 						List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
 						boolean isExist = false ;
 						for(int i = 0 ;i < list.size();i++){
@@ -561,7 +564,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 						mCategoryScanner.addItem(bean) ;
 						listData.add(mCategoryScanner) ;
 						mLeDeviceListAdapter.notifyDataSetChanged();
-					}*/
+					}
 
 				}
 			});
@@ -589,6 +592,10 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.ll_refresh:
+			Toast.makeText(getApplicationContext(),"refresh",1).show();
+			mBluetoothAdapter.startLeScan(mLeScanCallback);
+			break ;
 		case R.id.iv_back:
 			finish();
 			break;

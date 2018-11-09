@@ -5,6 +5,7 @@
     <string name="action_acceleration_msg_starting">Releasing memory…</string>
     <string name="action_acceleration_msg_finish">Boost complete, optimal state</string>
 
+    <string name="refresh">refresh</string>
     <string name="rear">rear</string>
     <string name="front">Font</string>
     <string name="siren">siren</string>

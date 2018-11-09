@@ -230,7 +230,7 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 				startActivity(intent);*/
 				break ;
 			case R.id.ll_main_device :
-				intent = new Intent(mContext, DeviceDisplayActivity.class);
+				intent = new Intent(mContext, DeviceScanActivity.class);
 				startActivity(intent);
 				break ;
 			case R.id.ll_mode :

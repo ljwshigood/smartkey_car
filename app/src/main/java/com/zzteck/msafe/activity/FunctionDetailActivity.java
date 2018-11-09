@@ -118,7 +118,14 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 						finish();
 						break;
 					case 6:
-
+						mKeySetBean = new KeySetBean();
+						mKeySetBean.setCount(mCount);
+						mKeySetBean.setType(0);
+						mKeySetBean.setKeySetDetail(mContext.getString(R.string.alarm));
+						mKeySetBean.setAction(10); // 报警
+						mKeySetBean.setBitmapString(String.valueOf(R.drawable.ic_alarm));
+						mDatabaseManager.editorKeySet(mKeySetBean);
+						finish();
 						break ;
 					case 7:
 						showWindows(2);

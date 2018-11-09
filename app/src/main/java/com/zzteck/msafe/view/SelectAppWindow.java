@@ -257,45 +257,21 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 				}
 			});
 		} else if (type == 2) { // anti call
-			
-			mRLOpenApp.setVisibility(View.GONE);
-			mLLSosCall.setVisibility(View.GONE);
-			mLLAntiCall.setVisibility(View.GONE);
-			mLLContactPhone.setVisibility(View.GONE);
-			mLlCameraSet.setVisibility(View.VISIBLE);
-			mLlCameraSet.findViewById(R.id.ll_focus).setVisibility(View.INVISIBLE);
-			mTvTitle.setText(mContext.getString(R.string.emergency_soound));
-			
-			mCbBackCamera.setButtonDrawable(R.drawable.cb_siren);
-			mCbFrontCamera.setButtonDrawable(R.drawable.cb_whistle);
-			
-			mTvSiren.setText(mContext.getString(R.string.siren));
-			mTvWhistle.setText(mContext.getString(R.string.whistle));
-			
+
 			ContactBean contact = mDatabaseManger.selectAntiContact();
-			
-			if(contact.getContact().equals("siren")){
-				mCbBackCamera.setChecked(true);
-				mCbFrontCamera.setChecked(false);
-			}else{
-				mCbBackCamera.setChecked(false);
-				mCbFrontCamera.setChecked(true);
-			}
-			
-			
-			/*ContactBean contact = mDatabaseManger.selectAntiContact();
 			if(contact != null){
 				mEtNumber.setText(contact.getNumber());
 				mEtContact.setText(contact.getContact());
 			}
-			
-			
+
+
 			mRLOpenApp.setVisibility(View.GONE);
 			mLLSosCall.setVisibility(View.GONE);
 			mLLAntiCall.setVisibility(View.VISIBLE);
 			mLlCameraSet.setVisibility(View.GONE);
 			mLLContactPhone.setVisibility(View.GONE);
-			mTvTitle.setText(mContext.getString(R.string.contact));*/
+			mTvTitle.setText(mContext.getString(R.string.contact));
+
 		} else if (type == 3) {
 			CameraInfo info = mDatabaseManger.selectCameraInfo();
 			if(info.getFront() == 1){
@@ -389,43 +365,19 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 						mISelectSOSContact.okSelect();
 					}
 				} else if (mType == 2) {// anti call
+
 					
-					KeySetBean bean = new KeySetBean();
-					
-					if(mCbBackCamera.isChecked()){
-						
-						Log.e("liujw","###############siren");
-						
-						DatabaseManager.getInstance(mContext).insertAntiContact(
-								"siren",
-								String.valueOf(R.raw.ic_siren));
-						bean.setBitmapString(String.valueOf(R.drawable.ic_siren_nomal));
-					}else{
-						Log.e("liujw","###############whistle");
-						DatabaseManager.getInstance(mContext).insertAntiContact(
-								"whistle",
-								String.valueOf(R.raw.ic_whistle));
-						bean.setBitmapString(String.valueOf(R.drawable.ic_whistle_nomal));
-					}
-				
-					bean.setKeySetDetail(mContext.getString(R.string.emergency_soound));
-					bean.setCount(mCount);
-					bean.setAction(3);
-					bean.setType(0);
-					mDatabaseManger.editorKeySet(bean);
-					
-					
-					/*DatabaseManager.getInstance(mContext).insertAntiContact(
+					DatabaseManager.getInstance(mContext).insertAntiContact(
 							mEtContact.getText().toString(),
 							mEtNumber.getText().toString());
 
 					KeySetBean bean = new KeySetBean();
-					bean.setBitmapString(String.valueOf(R.drawable.ic_anti_call_nomal));
+					bean.setBitmapString(String.valueOf(R.drawable.ic_anti_call));
 					bean.setKeySetDetail(mContext.getString(R.string.anti_call));
 					bean.setCount(mCount);
 					bean.setAction(3);
 					bean.setType(0);
-					mDatabaseManger.editorKeySet(bean);*/
+					mDatabaseManger.editorKeySet(bean);
 					dismiss();
 					mISelectSOSContact.okSelect();
 				} else if (mType == 3) { // camera capture ;

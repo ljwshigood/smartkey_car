@@ -652,9 +652,16 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			boolean isMoreDistance = mAlarmManager.isDeviceMoreDistance(rssi, address,deviceList.get(0),
 																		disturbList.get(0));	
 			if(isMoreDistance){
-				AppContext.mDeviceStatus[0] = 1;
-				mAlarmManager.isMoreDistanceAlarm(address,deviceList.get(0),disturbList.get(0));
-				alarmDialog(mContext,deviceList.get(0), mContext.getString(R.string.device_more_distance),Constant.DISTANCE);
+
+				List<KeySetBean>  list = DatabaseManager.getInstance(mContext).selectKeySet() ;
+				if(list != null && list.size() > 0){
+					KeySetBean bean = list.get(0) ;
+					if(bean.getAction() == 10){
+						AppContext.mDeviceStatus[0] = 1;
+						mAlarmManager.isMoreDistanceAlarm(address,deviceList.get(0),disturbList.get(0));
+						alarmDialog(mContext,deviceList.get(0), mContext.getString(R.string.device_more_distance),Constant.DISTANCE);
+					}
+				}
 			}else{
 				
 				AppContext.mDeviceStatus[1] = 1;
@@ -678,16 +685,21 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(address);
 		ArrayList<DisturbInfo> disturbList = mDatabaseManager.selectDisturbInfo(address);
 		if (deviceList.size() > 0) {
-			boolean isMoreDistance = mAlarmManager.isDeviceMoreDistance(rssi,
-					address, deviceList.get(0), disturbList.get(0));
+
+			List<KeySetBean>  list = DatabaseManager.getInstance(mContext).selectKeySet() ;
+			if(list != null && list.size() > 0) {
+				KeySetBean bean = list.get(0);
+				if (bean.getAction() != 10) {
+					return ;
+				}
+			}
+
+			boolean isMoreDistance = mAlarmManager.isDeviceMoreDistance(rssi,address, deviceList.get(0), disturbList.get(0));
 			if (isMoreDistance) {
-				boolean flag = mAlarmManager.isMoreDistanceAlarm(address,
-						deviceList.get(0), disturbList.get(0));
+				boolean flag = mAlarmManager.isMoreDistanceAlarm(address,deviceList.get(0), disturbList.get(0));
 				if (flag) {
 					AppContext.mDeviceStatus[0] = 1;
-					notifycationAlarm(mContext, address,
-							mContext.getString(R.string.device_more_distance),
-							Constant.DISTANCE);
+					notifycationAlarm(mContext, address,mContext.getString(R.string.device_more_distance),Constant.DISTANCE);
 				}
 			} else {
 

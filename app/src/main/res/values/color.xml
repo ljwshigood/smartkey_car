@@ -8,6 +8,7 @@
     <color name="blue_light">#66FFFF</color>
     <color name="green">#00a13d</color>
 	<color name="grey">#cacccc</color>
+    <color name="blue_dark">#3f6bcc</color>
     <color name="confirmblack">#333333</color>
     <color name="dark_complete">#D8D8D8</color>
 </resources>

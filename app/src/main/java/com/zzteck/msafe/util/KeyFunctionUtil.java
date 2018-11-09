@@ -27,6 +27,7 @@ import com.qihoo360.mobilesafe.opti.processclear.SysClearUtils;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.activity.AntilostCameraActivity;
 import com.zzteck.msafe.activity.BackgroundCameraActivity;
+import com.zzteck.msafe.activity.CallActivity;
 import com.zzteck.msafe.activity.FlashActivity;
 import com.zzteck.msafe.activity.OpenAppActivity;
 import com.zzteck.msafe.activity.RecordActivity;
@@ -299,10 +300,10 @@ public class KeyFunctionUtil {
 					//openApp(context,bean.getPackageName());
 					break;
 				case 3: // anti_call
-					/*context.sendBroadcast(new Intent(Constant.FINISH));
-					intent = new Intent(context, CallActivity.class);
+					mContext.sendBroadcast(new Intent(Constant.FINISH));
+					intent = new Intent(mContext, CallActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					context.startActivity(intent);*/
+					mContext.startActivity(intent);
 					ContactBean contact = mDatabaseManager.selectAntiContact();
 					if(contact != null){
 						createMediaPlayer(Integer.valueOf(contact.getNumber()),20);
