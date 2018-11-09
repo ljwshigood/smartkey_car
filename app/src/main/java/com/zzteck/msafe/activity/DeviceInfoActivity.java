@@ -445,6 +445,8 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 		mIvAddDevice.setOnClickListener(this);
 		mCbOpenShock.setOnClickListener(this);
 
+		mIvAddDevice.setVisibility(View.INVISIBLE) ;
+
 		SharedPreferences settings = mContext.getSharedPreferences("config", 0);
 		if (settings.getBoolean("switch", true)) {
 			mCbOpenShock.setChecked(true);
