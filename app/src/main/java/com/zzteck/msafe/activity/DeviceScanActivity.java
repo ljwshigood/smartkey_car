@@ -256,6 +256,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 							showProgressBarDialog();
 						}
 					});
+					mSystemDialog.show();
 				}
 			}
 		}) ;
@@ -538,9 +539,9 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				public void run() {
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
-					if(TextUtils.isEmpty(device.getName())){
+					/*if(TextUtils.isEmpty(device.getName())){
 						return ;
-					}
+					}*/
 					if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0){
 						List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
 						boolean isExist = false ;
