@@ -77,7 +77,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 
 	private Context mContext;
 
-	private BluetoothDevice mDevice;
+	private DeviceSetInfo mDevice;
 
 	private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
 		@Override
@@ -248,9 +248,11 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 					mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
 						@Override
 						public void dialogOk() {
+
 							if (deviceSetInfo == null)
 								return;
 							if (AppContext.mBluetoothLeService != null) {
+								mDevice = deviceSetInfo ;
 								AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
 							}
 							showProgressBarDialog();
@@ -397,15 +399,15 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		mDatabaseManager = DatabaseManager.getInstance(mContext);
 		mDatabaseManager.deleteAllDeviceInfo();
 		// query mac address
-		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(mDevice.getAddress());
+		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(mDevice.getmDeviceAddress());
 		if (deviceList.size() == 0) {
 			DeviceSetInfo info = new DeviceSetInfo();
 			info.setDistanceType(2);
 			info.setDisturb(false);
 			info.setFilePath(null);
 			info.setLocation(true);
-			info.setmDeviceAddress(mDevice.getAddress());
-			info.setmDeviceName(mDevice.getName());
+			info.setmDeviceAddress(mDevice.getmDeviceAddress());
+			info.setmDeviceName(mDevice.getmDeviceName());
 			info.setConnected(true);
 			info.setVisible(false);
 			info.setActive(true);
@@ -421,17 +423,17 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			soundInfo.setRingName(mContext.getString(R.string.ringset_qsmusic));
 			soundInfo.setRingVolume(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 			soundInfo.setShock(true);
-			mDatabaseManager.insertDeviceInfo(mDevice.getAddress(), info);
-			mDatabaseManager.insertDisurbInfo(mDevice.getAddress(), disturbInfo);
-			mDatabaseManager.insertSoundInfo(mDevice.getAddress(), soundInfo);
+			mDatabaseManager.insertDeviceInfo(mDevice.getmDeviceAddress(), info);
+			mDatabaseManager.insertDisurbInfo(mDevice.getmDeviceAddress(), disturbInfo);
+			mDatabaseManager.insertSoundInfo(mDevice.getmDeviceAddress(), soundInfo);
 		}
 		if (mScanning) {
 			mBluetoothAdapter.stopLeScan(mLeScanCallback);
 			mScanning = false;
 		}
 		Intent intent = new Intent(mContext, DeviceDisplayActivity.class);
-		intent.putExtra(DeviceDisplayActivity.EXTRAS_DEVICE_NAME,mDevice.getName());
-		intent.putExtra(DeviceDisplayActivity.EXTRAS_DEVICE_ADDRESS,mDevice.getAddress());
+		intent.putExtra(DeviceDisplayActivity.EXTRAS_DEVICE_NAME,mDevice.getmDeviceName());
+		intent.putExtra(DeviceDisplayActivity.EXTRAS_DEVICE_ADDRESS,mDevice.getmDeviceAddress());
 		intent.putExtra("device", mDevice);
 		setResult(DeviceDisplayActivity.RESULT_ADRESS, intent);
 		finish();
@@ -539,9 +541,9 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				public void run() {
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
-					/*if(TextUtils.isEmpty(device.getName())){
+					if(TextUtils.isEmpty(device.getName())){
 						return ;
-					}*/
+					}
 					if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0){
 						List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
 						boolean isExist = false ;
@@ -549,6 +551,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 							String address = list.get(i).getmDeviceAddress() ;
 							if(address.equals(device.getAddress())){
 								isExist = true ;
+								break ;
 							}
 						}
 						if(!isExist){

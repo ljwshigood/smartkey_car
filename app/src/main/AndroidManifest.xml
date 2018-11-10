@@ -136,7 +136,8 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".activity.DeviceInfoActivity"></activity>
+        <activity android:name=".activity.DeviceInfoActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" ></activity>
         <activity android:name=".activity.FeedBackActivity"></activity>
         <activity android:name=".activity.AboutMeActivity"></activity>
         <activity

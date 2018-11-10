@@ -305,9 +305,9 @@ public class KeyFunctionUtil {
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					mContext.startActivity(intent);
 					ContactBean contact = mDatabaseManager.selectAntiContact();
-					if(contact != null){
-						createMediaPlayer(Integer.valueOf(contact.getNumber()),20);
-					}
+					/*if(contact != null){
+						createMediaPlayer(R.raw.strum,20);
+					}*/
 
 					break;
 				case 4: // sos

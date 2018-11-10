@@ -53,7 +53,7 @@
                 android:layout_weight="10"
                 android:divider="@drawable/ic_divider"
                 android:listSelector="@drawable/ic_linear_selector"
-                android:visibility="invisible"></ListView>
+                android:visibility="visible"></ListView>
 
             <LinearLayout
                 android:id="@+id/ll_refresh"

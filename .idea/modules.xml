@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\souce_test\smartkey_car\smartkey_car\app\app.iml" filepath="D:\souce_test\smartkey_car\smartkey_car\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://D:\souce_test\smartkey_car\smartkey_car\lib\lib.iml" filepath="D:\souce_test\smartkey_car\smartkey_car\lib\lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartkey_car.iml" filepath="$PROJECT_DIR$/smartkey_car.iml" />
+      <module fileurl="file://D:\souce_test\smartkey_car\smartkey_car\smartkey_car.iml" filepath="D:\souce_test\smartkey_car\smartkey_car\smartkey_car.iml" />
     </modules>
   </component>
 </project>
