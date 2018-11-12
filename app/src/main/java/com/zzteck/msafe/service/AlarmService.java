@@ -488,6 +488,18 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 		mContext.startActivity(intent);
 	}
 
+	private Handler mAlarmHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			if(AppContext.mBluetoothLeService != null){
+				AppContext.mBluetoothLeService.readBatteryCharacteristic();
+				AppContext.mBluetoothLeService.getRssiVal() ;
+			}
+		}
+	} ;
+
 	
 	private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
 		@Override
@@ -503,11 +515,20 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				cancelStaticClickTimer();
 
 			} else if (BluetoothLeService.ACTION_GATT_RSSI.equals(action)) { // 超距离报警
-				if (!mAlarmManager.isApplicationBroughtToBackground(mContext)) {
-					progressTopTaskRssi(intent);
-				}else if (mAlarmManager.isApplicationBroughtToBackground(mContext)) {
-					progressRssi(intent);
+
+				List<KeySetBean> mListKeySet = DatabaseManager.getInstance(mContext).selectKeySet();
+				if(mListKeySet != null && mListKeySet.size() > 0) {
+					KeySetBean bean = mListKeySet.get(0);
+
+					if(bean.getAction() == 10){
+						if (!mAlarmManager.isApplicationBroughtToBackground(mContext)) {
+							progressTopTaskRssi(intent);
+						}else if (mAlarmManager.isApplicationBroughtToBackground(mContext)) {
+							progressRssi(intent);
+						}
+					}
 				}
+
 			} else if (BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE.equals(action)) { //设备寻找手机报警
 
 				String hexString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA) ;
@@ -550,7 +571,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			} else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 				
 				mHandler.removeCallbacks(mDisconnectRunnable);
-				
+				mAlarmHandler.sendEmptyMessage(0) ;
 				if (AppContext.mBluetoothLeService != null) {
 					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}

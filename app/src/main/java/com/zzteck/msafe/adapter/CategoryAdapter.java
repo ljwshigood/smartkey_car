@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.bean.Category;
 import com.zzteck.msafe.bean.DeviceSetInfo;
+import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.util.AlarmManager;
 
 import java.util.ArrayList;
@@ -112,6 +113,18 @@ public class CategoryAdapter extends BaseAdapter {
         return TYPE_ITEM;
     }
 
+    private boolean isConnectDevice(Context context ,String address){
+        ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(context).selectDeviceInfo(address);
+        boolean isExist = false ;
+        for(int i = 0;i < deviceList.size();i++){
+            isExist = deviceList.get(i).getmDeviceAddress().equals(address) ;
+           if(isExist){
+               break  ;
+           }
+        }
+       return isExist ;
+    }
+
     @Override
     public int getViewTypeCount() {
         return 2;
@@ -147,6 +160,7 @@ public class CategoryAdapter extends BaseAdapter {
                     viewHolder = new ViewHolder();
                     viewHolder.content = (TextView) convertView.findViewById(R.id.tv_name);
                     viewHolder.contentIcon = (ImageView) convertView.findViewById(R.id.iv_device);
+                    viewHolder.status = (TextView)convertView.findViewById(R.id.tv_status) ;
                     convertView.setTag(viewHolder);
                 } else {
                     viewHolder = (ViewHolder) convertView.getTag();
@@ -155,6 +169,13 @@ public class CategoryAdapter extends BaseAdapter {
                 // 绑定数据
                 DeviceSetInfo deviceSetInfo = (DeviceSetInfo) getItem(position);
                 viewHolder.content.setText( deviceSetInfo.getmDeviceName() );
+                boolean connectStatus = isConnectDevice(mContext,deviceSetInfo.getmDeviceAddress()) ;
+
+                if(connectStatus){
+                    viewHolder.status.setText("已連接");
+                }else {
+                    viewHolder.status.setText("");
+                }
 
                 DeviceSetInfo info = new DeviceSetInfo();
                 info.setFilePath("null");
@@ -180,6 +201,7 @@ public class CategoryAdapter extends BaseAdapter {
 
     private class ViewHolder {
         TextView content;
+        TextView status ;
         ImageView contentIcon;
     }
 

@@ -388,12 +388,12 @@
                             android:gravity="center"
                             android:orientation="vertical" >
 
-                            <CheckBox
+                            <ImageView
                                 android:id="@+id/cb_back"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/cb_back_camera_switch"
-                                android:button="@null" />
+                               />
 
                             <TextView
                                 android:id="@+id/tv_near"
@@ -426,13 +426,12 @@
                             android:gravity="center"
                             android:orientation="vertical" >
 
-                            <CheckBox
+                            <ImageView
                                 android:id="@+id/cb_front"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/cb_front_camera_switch"
-                                android:button="@null"
-                                android:checked="true" />
+                                />
 
                             <TextView
                                 android:id="@+id/tv_front"

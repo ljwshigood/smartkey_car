@@ -62,7 +62,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class DeviceInfoActivity extends BaseActivity implements OnClickListener, ICallbackUpdateView {
+public class DeviceDeleteActivity extends BaseActivity implements OnClickListener, ICallbackUpdateView {
 
 	private ImageView mIvAddDevice;
 
@@ -111,7 +111,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 									editor.putBoolean("switch", false);
 									editor.commit();
 								}
-								DeviceInfoActivity.this.setShakeConfig();
+								DeviceDeleteActivity.this.setShakeConfig();
 							}
 						})
 				.setNegativeButton(mContext.getString(R.string.alarm_cancel),
@@ -207,7 +207,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 	public void editNameDialog() {
 		FollowEditDialog dialog = new FollowEditDialog(mContext,
 				R.style.MyDialog, mContext.getString(R.string.set_name),
-				mDeviceSetInfo, mDeviceAddress, DeviceInfoActivity.this);
+				mDeviceSetInfo, mDeviceAddress, DeviceDeleteActivity.this);
 		dialog.show();
 
 	}
@@ -226,10 +226,14 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 
 	private CheckBox mCbDisturb;
 
+	private RelativeLayout mLLBattery ;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device_info);
+		mLLBattery = findViewById(R.id.ll_battery) ;
+		mLLBattery.setVisibility(View.GONE);
 		mDatabaseManager = DatabaseManager.getInstance(mContext);
 		mAlarmManager = AlarmManager.getInstance(mContext);
 
@@ -245,7 +249,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 			finish();
 			return;
 		}
-		mContext = DeviceInfoActivity.this;
+		mContext = DeviceDeleteActivity.this;
 		mDeviceSetInfo = mDatabaseManager.selectSingleDeviceInfo();
 
 		initView();
@@ -480,7 +484,9 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 		mLlNotDisturb.setOnClickListener(this);
 		mLLSound.setOnClickListener(this);
 		mCbLocation.setOnClickListener(this);
-		mLLDeviceDelete.setVisibility(View.GONE);
+
+		mLLDeviceDelete.setVisibility(View.VISIBLE) ;
+
 		if (mDeviceSetInfo != null) {
 			mCbLocation.setChecked(mDeviceSetInfo.isLocation());
 			mCbLocation.setChecked(LocationUtils.isOPen(mContext));
@@ -556,7 +562,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 	private String mFilePath;
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUESTCODE && resultCode == DeviceInfoActivity.RESULT_ADRESS) {
+		if (requestCode == REQUESTCODE && resultCode == DeviceDeleteActivity.RESULT_ADRESS) {
 			mDeviceSetInfo = mDatabaseManager.selectSingleDeviceInfo();
 			initView();
 			if (mDeviceSetInfo != null) {
@@ -626,7 +632,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 
 	private void showWindows(int type) {
 
-		menuWindow = new SelectPicPopupWindow(DeviceInfoActivity.this,
+		menuWindow = new SelectPicPopupWindow(DeviceDeleteActivity.this,
 				itemsOnClick, type);
 		menuWindow.showAtLocation(this.findViewById(R.id.main), Gravity.BOTTOM
 				| Gravity.CENTER_HORIZONTAL, 0, 0);

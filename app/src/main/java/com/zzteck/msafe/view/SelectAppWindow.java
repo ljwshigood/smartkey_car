@@ -126,13 +126,13 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 
 	private DatabaseManager mDatabaseManger;
 
-	private CheckBox mCbBackCamera;
+	private ImageView mCbBackCamera;
 	
 	private TextView mTvSiren ;
 	
 	private TextView mTvWhistle ;
 
-	private CheckBox mCbFrontCamera;
+	private ImageView mCbFrontCamera;
 
 	private CheckBox mCbSwitch;
 
@@ -167,10 +167,10 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 		mEtSosContact = (EditText) mMenuView.findViewById(R.id.et_sos_mobile);
 		mCbSwitch = (CheckBox) mMenuView.findViewById(R.id.cb_switch);
 		mLlCameraSet = (LinearLayout) mMenuView.findViewById(R.id.ll_select_camera);
-		mCbBackCamera = (CheckBox) mMenuView.findViewById(R.id.cb_back);
+		mCbBackCamera =  mMenuView.findViewById(R.id.cb_back);
 		mTvSiren = (TextView)mMenuView.findViewById(R.id.tv_near);
 		mTvWhistle= (TextView)mMenuView.findViewById(R.id.tv_front);
-		mCbFrontCamera = (CheckBox) mMenuView.findViewById(R.id.cb_front);
+		mCbFrontCamera =  mMenuView.findViewById(R.id.cb_front);
 		mLLContactPhone = (LinearLayout) mMenuView.findViewById(R.id.ll_call_contact);
 		mEtCallPhone = (EditText)mMenuView.findViewById(R.id.et_contact_mobile_value);
 		mIvAntiCallContact.setVisibility(View.INVISIBLE);
@@ -194,11 +194,17 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 
 			@Override
 			public void onClick(View v) {
-				if (mCbBackCamera.isChecked()) {
+
+				mCbBackCamera.setBackgroundResource(R.drawable.ic_camera_back_select);
+				mCbFrontCamera.setBackgroundResource(R.drawable.ic_camera_front_un_select);
+
+				mCbBackCamera.setTag(1);
+				mCbFrontCamera.setTag(0);
+				/*if (mCbBackCamera.isChecked()) {
 					mCbFrontCamera.setChecked(false);
 				} else {
 					mCbFrontCamera.setChecked(true);
-				}
+				}*/
 			}
 		});
 
@@ -206,11 +212,18 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 
 			@Override
 			public void onClick(View v) {
-				if (mCbFrontCamera.isChecked()) {
+
+				mCbBackCamera.setBackgroundResource(R.drawable.ic_camera_back_un_select);
+				mCbFrontCamera.setBackgroundResource(R.drawable.ic_camera_front_select);
+
+				mCbBackCamera.setTag(0);
+				mCbFrontCamera.setTag(1);
+
+				/*if (mCbFrontCamera.isChecked()) {
 					mCbBackCamera.setChecked(false);
 				} else {
 					mCbBackCamera.setChecked(true);
-				}
+				}*/
 			}
 		});
 
@@ -275,11 +288,15 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 		} else if (type == 3) {
 			CameraInfo info = mDatabaseManger.selectCameraInfo();
 			if(info.getFront() == 1){
-				mCbBackCamera.setChecked(false);
-				mCbFrontCamera.setChecked(true);
+				mCbBackCamera.setBackgroundResource(R.drawable.ic_camera_back_no_select);
+				mCbFrontCamera.setBackgroundResource(R.drawable.ic_camera_front_select);
+				/*mCbBackCamera.setChecked(false);
+				mCbFrontCamera.setChecked(true);*/
 			}else{
-				mCbBackCamera.setChecked(true);
-				mCbFrontCamera.setChecked(false);
+				mCbBackCamera.setBackgroundResource(R.drawable.ic_camera_back_select);
+				mCbFrontCamera.setBackgroundResource(R.drawable.ic_camera_front_un_select);
+				/*mCbBackCamera.setChecked(true);
+				mCbFrontCamera.setChecked(false);*/
 			}
 			
 			if(info.getFocus() == 0){
@@ -382,7 +399,8 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 					mISelectSOSContact.okSelect();
 				} else if (mType == 3) { // camera capture ;
 					CameraInfo info = new CameraInfo();
-					if (mCbFrontCamera.isChecked()) {
+
+					if (mCbFrontCamera.getTag() != null && ((int)mCbFrontCamera.getTag()) == 1) {
 						info.setFront(1);
 					} else {
 						info.setFront(0);

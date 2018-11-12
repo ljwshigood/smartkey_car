@@ -192,6 +192,18 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	private ArrayList<Category> listData = new ArrayList<Category>();
 
 
+	private boolean isConnectDevice(Context context ,String address){
+		ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(context).selectDeviceInfo(address);
+		boolean isExist = false ;
+		for(int i = 0;i < deviceList.size();i++){
+			isExist = deviceList.get(i).getmDeviceAddress().equals(address) ;
+			if(isExist){
+				break  ;
+			}
+		}
+		return isExist ;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -243,22 +255,42 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				}
 
 				if(mLeDeviceListAdapter.getItem(position) instanceof  DeviceSetInfo){
-					final DeviceSetInfo deviceSetInfo = (DeviceSetInfo) mLeDeviceListAdapter.getItem(position);
-					SystemHintsDialog_dialog mSystemDialog  = new SystemHintsDialog_dialog(mContext,"要与"+deviceSetInfo.getmDeviceName()+"配对吗",mContext.getString(R.string.cancel),mContext.getString(R.string.ok),0);
-					mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
-						@Override
-						public void dialogOk() {
 
-							if (deviceSetInfo == null)
-								return;
-							if (AppContext.mBluetoothLeService != null) {
-								mDevice = deviceSetInfo ;
-								AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
+					final DeviceSetInfo deviceSetInfo = (DeviceSetInfo) mLeDeviceListAdapter.getItem(position);
+					boolean connectStatus = isConnectDevice(mContext,deviceSetInfo.getmDeviceAddress()) ;
+
+					if(connectStatus){
+						SystemHintsDialog_dialog mSystemDialog = new SystemHintsDialog_dialog(mContext, "要与" + deviceSetInfo.getmDeviceName() + "取消配对吗", mContext.getString(R.string.cancel), mContext.getString(R.string.ok), 0);
+						mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
+							@Override
+							public void dialogOk() {
+
+								if (deviceSetInfo == null)
+									return;
+
+								Intent intent = new Intent(mContext,DeviceDeleteActivity.class) ;
+								startActivity(intent);
 							}
-							showProgressBarDialog();
-						}
-					});
-					mSystemDialog.show();
+						});
+						mSystemDialog.show();
+					}else {
+
+						SystemHintsDialog_dialog mSystemDialog = new SystemHintsDialog_dialog(mContext, "要与" + deviceSetInfo.getmDeviceName() + "配对吗", mContext.getString(R.string.cancel), mContext.getString(R.string.ok), 0);
+						mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
+							@Override
+							public void dialogOk() {
+
+								if (deviceSetInfo == null)
+									return;
+								if (AppContext.mBluetoothLeService != null) {
+									mDevice = deviceSetInfo;
+									AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
+								}
+								showProgressBarDialog();
+							}
+						});
+						mSystemDialog.show();
+					}
 				}
 			}
 		}) ;

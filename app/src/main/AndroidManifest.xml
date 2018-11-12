@@ -124,6 +124,8 @@
             android:launchMode="singleTask"
             android:theme="@style/dialog" >
         </activity>
+        <activity android:name=".activity.DeviceDeleteActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name="com.zzteck.msafe.activity.OpenAppActivity"
             android:launchMode="singleInstance"
