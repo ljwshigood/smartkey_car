@@ -34,6 +34,7 @@ import com.zzteck.msafe.activity.RecordActivity;
 import com.zzteck.msafe.activity.SosActivity;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.ContactBean;
+import com.zzteck.msafe.bean.KeySetBean;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.impl.ComfirmListener;
 import com.zzteck.msafe.view.SystemHintsDialog;
@@ -185,7 +186,7 @@ public class KeyFunctionUtil {
 	
 	private MediaPlayer mMediaPlayer = null;
 	
-	private void createMediaPlayer(int id, float volume) {
+	private void createMediaPlayer(int id) {
 		
 		if(mMediaPlayer != null && mMediaPlayer.isPlaying()){
 			mMediaPlayer.release();
@@ -221,6 +222,18 @@ public class KeyFunctionUtil {
 			int action = (int) msg.obj;
 			Intent intent = null ;
 			switch (action) {
+				case 10:
+					List<KeySetBean>  list = DatabaseManager.getInstance(mContext).selectKeySet() ;
+					if(list != null && list.size() > 0){
+						KeySetBean bean = list.get(0) ;
+						if(bean.getCount() == 0){
+							createMediaPlayer(R.raw.ic_siren);
+						}else {
+							createMediaPlayer(R.raw.ic_whistle);
+						}
+					}
+
+					break ;
 				case 9:
 					if (islight) {
 						turnOnFlash();

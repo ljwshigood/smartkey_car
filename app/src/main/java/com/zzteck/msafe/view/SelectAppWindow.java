@@ -2,11 +2,13 @@ package com.zzteck.msafe.view;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -143,7 +145,10 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 	private ImageView mIvAntiCallContact ;
 	
 	private ImageView mIvCallPhoneContact ;
-	
+
+	private LinearLayout mLLAlarm ;
+
+	private ImageView mIvSiren ,mIvWhitle ;
 
 	public SelectAppWindow(Activity context, OnClickListener itemsOnClick,
 			int type) {
@@ -153,7 +158,10 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.pop_select_app, null);
 		this.mType = type;
+		mIvSiren = mMenuView.findViewById(R.id.iv_siren) ;
+		mIvWhitle = mMenuView.findViewById(R.id.iv_whistle) ;
 		mEtSosMessage = (EditText)mMenuView.findViewById(R.id.et_sos_message);
+		mLLAlarm = mMenuView.findViewById(R.id.ll_alarm) ;
 		mIvCallPhoneContact = (ImageView)mMenuView.findViewById(R.id.iv_call_contact);
 		mIvAntiCallContact = (ImageView)mMenuView.findViewById(R.id.iv_anti_call);
 		mEtContact = (EditText) mMenuView.findViewById(R.id.contact_value);
@@ -227,7 +235,57 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 			}
 		});
 
-		if (type == 0) { // open app
+		mLLAlarm.setVisibility(View.GONE);
+		if(type == 6){ // alarm
+
+			mRLOpenApp.setVisibility(View.GONE);
+			mLLSosCall.setVisibility(View.GONE);
+			mLLAntiCall.setVisibility(View.GONE);
+			mLlCameraSet.setVisibility(View.GONE);
+			mLLContactPhone.setVisibility(View.GONE);
+			mLLAlarm.setVisibility(View.VISIBLE) ;
+
+			List<KeySetBean> mListKeySet = DatabaseManager.getInstance(mContext).selectKeySet();
+			if(mListKeySet != null && mListKeySet.size() > 0) {
+				KeySetBean bean = mListKeySet.get(0);
+				if(bean.getAction() == 10){
+					if(bean.getCount() == 0 ){
+						mIvSiren.setBackgroundResource(R.drawable.ic_siren_press);
+						mIvWhitle.setBackgroundResource(R.drawable.ic_whistle_nomal);
+					}else {
+						mIvSiren.setBackgroundResource(R.drawable.ic_siren_nomal);
+						mIvWhitle.setBackgroundResource(R.drawable.ic_whistle_press);
+					}
+				}else{
+					mIvSiren.setBackgroundResource(R.drawable.ic_siren_press);
+					mIvWhitle.setBackgroundResource(R.drawable.ic_whistle_nomal);
+				}
+			}else{
+				mIvSiren.setBackgroundResource(R.drawable.ic_siren_press);
+				mIvWhitle.setBackgroundResource(R.drawable.ic_whistle_nomal);
+			}
+
+			mIvSiren.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					mIvSiren.setTag(1) ;
+					mIvWhitle.setTag(0);
+					mIvSiren.setBackgroundResource(R.drawable.ic_siren_press);
+					mIvWhitle.setBackgroundResource(R.drawable.ic_whistle_nomal);
+				}
+			});
+
+			mIvWhitle.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					mIvSiren.setTag(0) ;
+					mIvWhitle.setTag(1);
+					mIvSiren.setBackgroundResource(R.drawable.ic_siren_nomal);
+					mIvWhitle.setBackgroundResource(R.drawable.ic_whistle_press);
+				}
+			});
+
+		}else if (type == 0) { // open app
 			mRLOpenApp.setVisibility(View.VISIBLE);
 			mLLSosCall.setVisibility(View.GONE);
 			mLLAntiCall.setVisibility(View.GONE);
@@ -335,7 +393,26 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 
 			@Override
 			public void onClick(View v) {
-				if (mType == 0) { // insert into app info
+				if(mType == 6){
+					KeySetBean mKeySetBean = new KeySetBean();
+
+					if(mIvWhitle.getTag() != null && ((int)mIvWhitle.getTag()) == 1){
+						mKeySetBean.setCount(1);
+					}else if(mIvSiren.getTag() != null && ((int)mIvSiren.getTag()) == 1){
+						mKeySetBean.setCount(0);
+					}else {
+						mKeySetBean.setCount(0);
+					}
+
+					mKeySetBean.setType(0);
+					mKeySetBean.setKeySetDetail(mContext.getString(R.string.alarm));
+					mKeySetBean.setAction(10); // 报警
+					mKeySetBean.setBitmapString(String.valueOf(R.drawable.ic_alarm));
+					mDatabaseManger.editorKeySet(mKeySetBean);
+					dismiss();
+					mISelectSOSContact.okSelect();
+
+				}else if (mType == 0) { // insert into app info
 
 					mDatabaseManger.insertAppInfo(mCurrentApp);
 

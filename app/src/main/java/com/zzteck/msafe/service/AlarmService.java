@@ -529,13 +529,14 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				if(mListKeySet != null && mListKeySet.size() > 0) {
 					KeySetBean bean = mListKeySet.get(0);
 
-					if(bean.getAction() == 10){
+					/*if(bean.getAction() == 10){
 						if (!mAlarmManager.isApplicationBroughtToBackground(mContext)) {
 							progressTopTaskRssi(intent);
 						}else if (mAlarmManager.isApplicationBroughtToBackground(mContext)) {
 							progressRssi(intent);
 						}
-					}
+					}*/
+
 				}
 
 			} else if (BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE.equals(action)) { //设备寻找手机报警

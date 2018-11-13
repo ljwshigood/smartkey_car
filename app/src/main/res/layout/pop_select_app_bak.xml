@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/select_app"
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:background="@android:color/white"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/ll_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="15"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/ll_title"
@@ -25,7 +25,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/ic_pop_title"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tv_title"
@@ -34,7 +34,8 @@
                     android:layout_marginLeft="15dp"
                     android:text="@string/open_app"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/txt_size_15"></TextView>
+                    android:textSize="@dimen/txt_size_15" >
+                </TextView>
             </LinearLayout>
 
             <RelativeLayout
@@ -43,7 +44,7 @@
                 android:layout_height="400dp"
                 android:layout_below="@id/ll_title"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone" >
 
                 <ListView
                     android:id="@+id/lv_select_app"
@@ -51,7 +52,8 @@
                     android:layout_height="match_parent"
                     android:layout_margin="15dp"
                     android:background="@android:color/transparent"
-                    android:divider="@drawable/ic_divider"></ListView>
+                    android:divider="@drawable/ic_divider" >
+                </ListView>
 
                 <ProgressBar
                     android:id="@+id/pb_progress"
@@ -59,7 +61,8 @@
                     android:layout_height="30dp"
                     android:layout_centerInParent="true"
                     android:indeterminate="true"
-                    android:indeterminateDrawable="@anim/progressbar_small_anim"></ProgressBar>
+                    android:indeterminateDrawable="@anim/progressbar_small_anim" >
+                </ProgressBar>
             </RelativeLayout>
 
             <LinearLayout
@@ -67,12 +70,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical" >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -82,7 +85,8 @@
                         android:layout_marginTop="5dp"
                         android:text="@string/sos_info"
                         android:textColor="@color/dark"
-                        android:textSize="@dimen/txt_size_15"></TextView>
+                        android:textSize="@dimen/txt_size_15" >
+                    </TextView>
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -98,12 +102,13 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_sos_call"></ImageView>
+                        android:src="@drawable/ic_sos_call" >
+                    </ImageView>
 
                     <TextView
                         android:id="@+id/tv_mobile"
@@ -112,7 +117,8 @@
                         android:layout_marginLeft="10dp"
                         android:text="@string/sos"
                         android:textColor="@color/dark"
-                        android:textSize="@dimen/txt_size_15"></TextView>
+                        android:textSize="@dimen/txt_size_15" >
+                    </TextView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -120,14 +126,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="80"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical" >
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -140,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="40"
                         android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:orientation="vertical" >
 
                         <EditText
                             android:id="@+id/et_sos_mobile"
@@ -154,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="80"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -166,7 +172,8 @@
                             android:layout_width="35dp"
                             android:layout_height="35dp"
                             android:layout_marginLeft="10dp"
-                            android:src="@drawable/ic_sos_contact"></ImageView>
+                            android:src="@drawable/ic_sos_contact" >
+                        </ImageView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -174,7 +181,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/ic_divider"></ImageView>
+                    android:src="@drawable/ic_divider" >
+                </ImageView>
 
                 <LinearLayout
                     android:id="@+id/ll_sos_message"
@@ -183,12 +191,13 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <ImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:src="@drawable/ic_sos_message"></ImageView>
+                        android:src="@drawable/ic_sos_message" >
+                    </ImageView>
 
                     <TextView
                         android:id="@+id/tv_message"
@@ -196,7 +205,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="@string/message"
-                        android:textColor="@color/dark"></TextView>
+                        android:textColor="@color/dark" >
+                    </TextView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -204,14 +214,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical" >
 
                         <EditText
                             android:id="@+id/et_sos_message"
@@ -225,7 +235,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_divider"></ImageView>
+                    android:background="@drawable/ic_divider" >
+                </ImageView>
             </LinearLayout>
 
             <LinearLayout
@@ -234,7 +245,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:id="@+id/ll_contact"
@@ -242,12 +253,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_contact"></ImageView>
+                        android:src="@drawable/ic_contact" >
+                    </ImageView>
 
                     <TextView
                         android:id="@+id/tv_contact"
@@ -256,18 +268,19 @@
                         android:layout_marginLeft="10dp"
                         android:text="@string/send_call"
                         android:textColor="#4B4B4B"
-                        android:textSize="@dimen/txt_size_15"></TextView>
+                        android:textSize="@dimen/txt_size_15" >
+                    </TextView>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_contact_value"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical" >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp">
+                        android:layout_height="40dp" >
 
                         <EditText
                             android:id="@+id/contact_value"
@@ -302,13 +315,14 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="30dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <ImageView
                         android:id="@+id/iv_mobile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_mobile"></ImageView>
+                        android:src="@drawable/ic_mobile" >
+                    </ImageView>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -316,7 +330,8 @@
                         android:layout_marginLeft="10dp"
                         android:text="@string/send_call_number"
                         android:textColor="@color/dark"
-                        android:textSize="@dimen/txt_size_15"></TextView>
+                        android:textSize="@dimen/txt_size_15" >
+                    </TextView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -324,7 +339,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical" >
 
                     <EditText
                         android:id="@+id/et_mobile_value"
@@ -348,7 +363,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:id="@+id/ll_camera"
@@ -357,7 +372,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <LinearLayout
                         android:id="@+id/ll_back_camera"
@@ -365,19 +380,20 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical" >
 
                             <ImageView
                                 android:id="@+id/cb_back"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/cb_back_camera_switch" />
+                                android:background="@drawable/cb_back_camera_switch"
+                               />
 
                             <TextView
                                 android:id="@+id/tv_near"
@@ -393,7 +409,8 @@
                         android:layout_height="match_parent"
                         android:layout_marginBottom="20dp"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/ic_vertical_divider"></ImageView>
+                        android:background="@drawable/ic_vertical_divider" >
+                    </ImageView>
 
                     <LinearLayout
                         android:id="@+id/ll_front_camera"
@@ -401,19 +418,20 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical" >
 
                             <ImageView
                                 android:id="@+id/cb_front"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/cb_front_camera_switch" />
+                                android:background="@drawable/cb_front_camera_switch"
+                                />
 
                             <TextView
                                 android:id="@+id/tv_front"
@@ -428,14 +446,15 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_divider"></ImageView>
+                    android:background="@drawable/ic_divider" >
+                </ImageView>
 
                 <LinearLayout
                     android:id="@+id/ll_focus"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -443,7 +462,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_weight="20"
                         android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:orientation="vertical" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -465,7 +484,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="80"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <CheckBox
                             android:id="@+id/cb_switch"
@@ -476,145 +495,12 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <LinearLayout
-                android:id="@+id/ll_alarm"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <LinearLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/ll_siren"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/iv_siren"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/cb_siren" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/siren"
-                                android:textColor="@android:color/black" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/ic_vertical_divider"></ImageView>
-
-                    <LinearLayout
-                        android:id="@+id/ll_whistle"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/iv_whistle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/cb_whistle" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/whistle"
-                                android:textColor="@android:color/black" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_divider"></ImageView>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:visibility="invisible"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="15dp"
-                        android:layout_weight="20"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/camera_focus"
-                            android:textColor="@color/dark"
-                            android:textSize="@dimen/txt_size_20" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/camera_focus_info"
-                            android:textColor="@color/dark" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="80"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:button="@drawable/cb_switch" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-
             <LinearLayout
                 android:id="@+id/ll_call_contact"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -622,12 +508,13 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="30dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_mobile"></ImageView>
+                        android:src="@drawable/ic_mobile" >
+                    </ImageView>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -635,19 +522,20 @@
                         android:layout_marginLeft="10dp"
                         android:text="@string/send_call_number"
                         android:textColor="@color/dark"
-                        android:textSize="@dimen/txt_size_15"></TextView>
+                        android:textSize="@dimen/txt_size_15" >
+                    </TextView>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical" >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="35dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal" >
 
                         <EditText
                             android:id="@+id/et_contact_mobile_value"
@@ -674,9 +562,6 @@
                         android:background="@color/dark" />
                 </LinearLayout>
             </LinearLayout>
-
-
-
         </LinearLayout>
 
         <LinearLayout

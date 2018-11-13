@@ -20,6 +20,7 @@ import com.zzteck.msafe.activity.AboutMeActivity;
 import com.zzteck.msafe.activity.DeviceDisplayActivity;
 import com.zzteck.msafe.activity.DeviceInfoActivity;
 import com.zzteck.msafe.activity.FeedBackActivity;
+import com.zzteck.msafe.service.BgMusicControlService;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.SharePerfenceUtil;
 
@@ -99,9 +100,12 @@ public class NavPopWindows extends PopupWindow implements View.OnClickListener{
 				intent.putExtra(BluetoothLeService.EXTRA_DATA,"E3 07 A1 01 01 A3 E5") ;
 				mContext.sendBroadcast(intent);*/
 
-
-				intent = new Intent(BluetoothLeService.ACTION_GATT_RSSI) ;
-				mContext.sendBroadcast(intent);
+				Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
+				intentDistance.putExtra("address", "");
+				intentDistance.putExtra("control", 1);
+				mContext.sendBroadcast(intentDistance);
+				/*intent = new Intent(BluetoothLeService.ACTION_GATT_RSSI) ;
+				mContext.sendBroadcast(intent);*/
 
 				break ;
 			case R.id.ll_about_me :
