@@ -632,10 +632,10 @@ public class DeviceDeleteActivity extends BaseActivity implements OnClickListene
 
 	private void showWindows(int type) {
 
-		menuWindow = new SelectPicPopupWindow(DeviceDeleteActivity.this,
+		/*menuWindow = new SelectPicPopupWindow(DeviceDeleteActivity.this,
 				itemsOnClick, type);
 		menuWindow.showAtLocation(this.findViewById(R.id.main), Gravity.BOTTOM
-				| Gravity.CENTER_HORIZONTAL, 0, 0);
+				| Gravity.CENTER_HORIZONTAL, 0, 0);*/
 	}
 
 	// 为弹出窗口实现监听类

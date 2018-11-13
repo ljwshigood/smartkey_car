@@ -77,10 +77,10 @@ public class AlarmManager {
 
 	public boolean isMoreDistanceAlarm(String address, DeviceSetInfo info,
 			DisturbInfo disturnInfo) {
-		if (disturnInfo.isDisturb()
+		/*if (disturnInfo.isDisturb()
 				&& !FomatTimeUtil.isInDisturb(disturnInfo.getStartTime(),
-						disturnInfo.getEndTime())) {// 在勿扰模式的时间段下
-			Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
+						disturnInfo.getEndTime()))*/
+			/*Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
 			intentDistance.putExtra("control", 1);
 			intentDistance.putExtra("address", address);
 			mContext.sendBroadcast(intentDistance);
@@ -88,7 +88,7 @@ public class AlarmManager {
 				return true;
 			}
 
-		} else {// 没有开启勿扰模式
+		} else {*/// 没有开启勿扰模式
 			Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
 			intentDistance.putExtra("address", address);
 			intentDistance.putExtra("control", 1);
@@ -96,7 +96,7 @@ public class AlarmManager {
 			if (info != null) {
 				return true;
 			}
-		}
+		/*	}*/
 		return false;
 	}
 

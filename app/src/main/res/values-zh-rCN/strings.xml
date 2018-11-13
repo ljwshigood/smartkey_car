@@ -84,7 +84,7 @@
     <string name="change_picture">更换图片</string>
     <string name="shark">摇晃报警</string>
     <string name="not_disturb">勿扰模式</string>
-    <string name="device_list">设备列表</string>
+    <string name="device_list">设备信息</string>
     <string name="maunal">手动启动</string>
     <string name="from_to">从 \n至</string>
     <string name="maunal_tip">当"勿扰模式"启动后，该设备在设定的时间内发出警报时将被设置成静音</string>

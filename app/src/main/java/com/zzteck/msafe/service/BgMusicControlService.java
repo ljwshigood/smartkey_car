@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 
+import com.zzteck.msafe.R;
 import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.bean.MediaPlayerBean;
 import com.zzteck.msafe.bean.SoundInfo;
@@ -67,28 +68,37 @@ public class BgMusicControlService extends Service {
 		registerReceiver(serviceReceiver, filter);
 	}
 
-	private MediaPlayerBean createMediaPlayer(int id, float volume,
-			double duration, final String address) {
+	private MediaPlayer mMediaPlayer = null;
+
+	private void createMediaPlayer(int id) {
 		// 创建MediaPlayer
-		MediaPlayer mediaPlayer = null;
 
-		mediaPlayer = MediaPlayer.create(getBaseContext(), id);
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		if(mMediaPlayer != null && mMediaPlayer.isPlaying()){
+			mMediaPlayer.release();
+			mMediaPlayer = null;
+		}
+		mMediaPlayer = MediaPlayer.create(getBaseContext(), id);
+		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		// 准备、并播放音乐
-		
-		mediaPlayer.setVolume(volume, volume);
-		mediaPlayer.start();
-		
-		long formatDuration = (long) duration * 1000;
-		final int playCount = (int) formatDuration / mediaPlayer.getDuration();
-		MediaPlayerBean bean = new MediaPlayerBean();
-		bean.setMediaPlayer(mediaPlayer);
+		int mMaxAudio = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
-		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+		mMediaPlayer.setVolume(mMaxAudio, mMaxAudio);
+		mMediaPlayer.start();
+		
+		//long formatDuration = (long) duration * 1000;
+		//final int playCount = (int) formatDuration / mediaPlayer.getDuration();
+		//MediaPlayerBean bean = new MediaPlayerBean();
+		//bean.setMediaPlayer(mediaPlayer);
+
+		mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				MediaPlayerBean bean = iteratorMediaPlayer(mHashMapMediaPlayer,
+
+				mp.seekTo(0);
+				mp.start();
+
+				/*MediaPlayerBean bean = iteratorMediaPlayer(mHashMapMediaPlayer,
 						address);
 				if (bean != null) {
 					bean.increase();
@@ -105,10 +115,10 @@ public class BgMusicControlService extends Service {
 						mp.seekTo(0);
 						mp.start();
 					}
-				}
+				}*/
 			}
 		});
-		return bean;
+	//	return bean;
 	}
 
 	private Vibrator vibrator;
@@ -121,7 +131,10 @@ public class BgMusicControlService extends Service {
 			String address = intent.getStringExtra("address");
 			switch (control) {
 			case 1:
-				ArrayList<SoundInfo> soundList = mDatabaseManger
+
+				createMediaPlayer(R.raw.alarm);
+
+				/*ArrayList<SoundInfo> soundList = mDatabaseManger
 						.selectSoundInfo(address);
 				ArrayList<DisturbInfo> disturbList = mDatabaseManger
 						.selectDisturbInfo(address);
@@ -160,7 +173,7 @@ public class BgMusicControlService extends Service {
 						//vibrator.vibrate(pattern, 2);
 						
 					}
-				}
+				}*/
 
 				break;
 			case 2:
@@ -210,7 +223,13 @@ public class BgMusicControlService extends Service {
 
 	private void releaseMusic(String address) {
 
-		MediaPlayerBean mediaBean = iteratorMediaPlayer(mHashMapMediaPlayer,address);
+		if(mMediaPlayer != null){
+			mMediaPlayer.release();
+			mMediaPlayer = null ;
+		}
+
+
+		/*MediaPlayerBean mediaBean = iteratorMediaPlayer(mHashMapMediaPlayer,address);
 		if (mediaBean == null) {
 			return;
 		}
@@ -222,7 +241,7 @@ public class BgMusicControlService extends Service {
 				vibrator.cancel();
 			}
 		}
-		mHashMapMediaPlayer.remove(address);
+		mHashMapMediaPlayer.remove(address);*/
 	}
 
 	@Override

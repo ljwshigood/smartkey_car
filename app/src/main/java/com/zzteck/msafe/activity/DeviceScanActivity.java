@@ -48,6 +48,7 @@ import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.Category;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
+import com.zzteck.msafe.bean.MsgEvent;
 import com.zzteck.msafe.bean.SoundInfo;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.dialog.SystemHintsDialog_dialog;
@@ -56,6 +57,8 @@ import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
 import com.zzteck.msafe.view.FollowProgressDialog;
 import com.zzteck.msafe.view.SystemHintsDialog;
+
+import org.simple.eventbus.Subscriber;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -420,6 +423,11 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		}
 	}
 
+	@Subscriber
+	public void onEventMainThread(MsgEvent msg){
+		mLeDeviceListAdapter.notifyDataSetChanged();
+	}
+
 	private ArrayList<BluetoothDevice> mLeDevices;
 
 	private DatabaseManager mDatabaseManager;
@@ -429,7 +437,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			return ;
 		}
 		mDatabaseManager = DatabaseManager.getInstance(mContext);
-		mDatabaseManager.deleteAllDeviceInfo();
+		//mDatabaseManager.deleteAllDeviceInfo();
 		// query mac address
 		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(mDevice.getmDeviceAddress());
 		if (deviceList.size() == 0) {
@@ -458,7 +466,12 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			mDatabaseManager.insertDeviceInfo(mDevice.getmDeviceAddress(), info);
 			mDatabaseManager.insertDisurbInfo(mDevice.getmDeviceAddress(), disturbInfo);
 			mDatabaseManager.insertSoundInfo(mDevice.getmDeviceAddress(), soundInfo);
+
+		}else{ // 修改连接
+			mDatabaseManager.updateDeviceConnect(mDevice.getmDeviceAddress(),1);
 		}
+
+
 		if (mScanning) {
 			mBluetoothAdapter.stopLeScan(mLeScanCallback);
 			mScanning = false;

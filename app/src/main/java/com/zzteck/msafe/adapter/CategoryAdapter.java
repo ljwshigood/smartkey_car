@@ -117,10 +117,11 @@ public class CategoryAdapter extends BaseAdapter {
         ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(context).selectDeviceInfo(address);
         boolean isExist = false ;
         for(int i = 0;i < deviceList.size();i++){
-            isExist = deviceList.get(i).getmDeviceAddress().equals(address) ;
-           if(isExist){
-               break  ;
-           }
+            DeviceSetInfo info = deviceList.get(i) ;
+            if(info.getmDeviceAddress().equals(address) && info.isConnected()){
+                isExist = true ;
+                break ;
+            }
         }
        return isExist ;
     }
@@ -158,9 +159,9 @@ public class CategoryAdapter extends BaseAdapter {
                     convertView = mInflater.inflate(R.layout.list_item_device, null);
 
                     viewHolder = new ViewHolder();
-                    viewHolder.content = (TextView) convertView.findViewById(R.id.tv_name);
-                    viewHolder.contentIcon = (ImageView) convertView.findViewById(R.id.iv_device);
-                    viewHolder.status = (TextView)convertView.findViewById(R.id.tv_status) ;
+                    viewHolder.content =  convertView.findViewById(R.id.tv_name);
+                    viewHolder.contentIcon =  convertView.findViewById(R.id.iv_device);
+                    viewHolder.status = convertView.findViewById(R.id.tv_status) ;
                     convertView.setTag(viewHolder);
                 } else {
                     viewHolder = (ViewHolder) convertView.getTag();
@@ -172,7 +173,7 @@ public class CategoryAdapter extends BaseAdapter {
                 boolean connectStatus = isConnectDevice(mContext,deviceSetInfo.getmDeviceAddress()) ;
 
                 if(connectStatus){
-                    viewHolder.status.setText("已連接");
+                    viewHolder.status.setText("已连接");
                 }else {
                     viewHolder.status.setText("");
                 }

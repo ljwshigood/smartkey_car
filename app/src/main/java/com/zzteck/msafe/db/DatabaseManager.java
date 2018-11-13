@@ -343,6 +343,8 @@ public class DatabaseManager {
 		return deviceInfo ;
 	}
 
+
+
 	public ArrayList<DeviceSetInfo> selectDeviceInfo(String deviceID) {
 		ArrayList<DeviceSetInfo> deviceInfoList = null;
 		String sql = "select * from device_set where unique_id = \"%s\" ";
@@ -362,18 +364,16 @@ public class DatabaseManager {
 						.getColumnIndexOrThrow("imagepath")));
 				deviceInfo.setDistanceType(cursor.getInt(cursor
 						.getColumnIndexOrThrow("distance")));
-				boolean isDisturb = cursor.getInt(cursor
-						.getColumnIndexOrThrow("isdisturb")) == 1 ? true
-						: false;
-				boolean isLocation = cursor.getInt(cursor
-						.getColumnIndexOrThrow("islocation")) == 1 ? true
-						: false;
-				boolean isActivite = cursor.getInt(cursor
-						.getColumnIndexOrThrow("deviceIsActive")) == 1 ? true
-						: false;
+				boolean isDisturb = cursor.getInt(cursor.getColumnIndexOrThrow("isdisturb")) == 1 ? true : false;
+				boolean isLocation = cursor.getInt(cursor.getColumnIndexOrThrow("islocation")) == 1 ? true : false;
+				boolean isActivite = cursor.getInt(cursor.getColumnIndexOrThrow("deviceIsActive")) == 1 ? true : false;
+
+				boolean connected = cursor.getInt(cursor.getColumnIndexOrThrow("connect")) == 1 ? true : false  ;
+
 				deviceInfo.setDisturb(isDisturb);
 				deviceInfo.setActive(isActivite);
 				deviceInfo.setLocation(isLocation);
+				deviceInfo.setConnected(connected) ;
 				deviceInfoList.add(deviceInfo);
 			}
 		}
@@ -507,7 +507,14 @@ public class DatabaseManager {
 		Log.e("liujw", "####################sql " + sql);
 		mSQLiteDatabase.execSQL(sql);
 	}
-	
+
+	public void updateDeviceConnect(String deviceID,int status) {
+		String sql = "update device_set set connect = %d where unique_id = \"%s\"";
+		sql = String.format(sql,status,deviceID);
+		Log.e("liujw", "####################sql " + sql);
+		mSQLiteDatabase.execSQL(sql);
+	}
+
 	
 	public void updateDeviceLatLogIsConnect(String lat,String lng) {
 		String sql = "update device_set set latitude = \"%s\",longitude =\"%s\" where islocation = 1 and connect = 1";

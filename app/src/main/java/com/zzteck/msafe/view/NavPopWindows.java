@@ -95,10 +95,14 @@ public class NavPopWindows extends PopupWindow implements View.OnClickListener{
 				break ;
 			case R.id.ll_update :
 
-				intent = new Intent(BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE) ;
+				/*intent = new Intent(BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE) ;
 				intent.putExtra(BluetoothLeService.EXTRA_DATA,"E3 07 A1 01 01 A3 E5") ;
+				mContext.sendBroadcast(intent);*/
+
+
+				intent = new Intent(BluetoothLeService.ACTION_GATT_RSSI) ;
 				mContext.sendBroadcast(intent);
-				//Toast.makeText(mContext,"当前已经是最新版本",1).show();
+
 				break ;
 			case R.id.ll_about_me :
 

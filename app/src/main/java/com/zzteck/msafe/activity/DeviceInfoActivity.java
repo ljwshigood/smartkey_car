@@ -626,10 +626,10 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 
 	private void showWindows(int type) {
 
-		menuWindow = new SelectPicPopupWindow(DeviceInfoActivity.this,
+		/*menuWindow = new SelectPicPopupWindow(DeviceInfoActivity.this,
 				itemsOnClick, type);
 		menuWindow.showAtLocation(this.findViewById(R.id.main), Gravity.BOTTOM
-				| Gravity.CENTER_HORIZONTAL, 0, 0);
+				| Gravity.CENTER_HORIZONTAL, 0, 0);*/
 	}
 
 	// 为弹出窗口实现监听类

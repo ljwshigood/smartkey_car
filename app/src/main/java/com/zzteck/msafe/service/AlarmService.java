@@ -45,6 +45,7 @@ import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.bean.KeySetBean;
+import com.zzteck.msafe.bean.MsgEvent;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.impl.ComfirmListener;
 import com.zzteck.msafe.util.AlarmManager;
@@ -54,6 +55,8 @@ import com.zzteck.msafe.util.ScreenObserver;
 import com.zzteck.msafe.util.SharePerfenceUtil;
 import com.zzteck.msafe.view.FollowAlarmActivity;
 import com.zzteck.msafe.view.SystemHintsDialog;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -496,7 +499,9 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			if(AppContext.mBluetoothLeService != null){
 				AppContext.mBluetoothLeService.readBatteryCharacteristic();
 				AppContext.mBluetoothLeService.getRssiVal() ;
+				Toast.makeText(mContext,"########################rssi : "+AppContext.mBluetoothLeService.getRssiVal(),1).show() ;
 			}
+			mAlarmHandler.sendEmptyMessage(0) ;
 		}
 	} ;
 
@@ -509,7 +514,11 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			mIntent = intent ;
 			String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
 			if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-				
+
+				mDatabaseManager.updateDeviceConnect(address,0);
+				//更新界面
+				EventBus.getDefault().post(new MsgEvent("",1));
+
 				mClickCount = 0 ;
 				cancelClickTimer();
 				cancelStaticClickTimer();
@@ -540,29 +549,30 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				mClickCount = 0 ;
 				if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A1 E5")){ // 拍照
 
+					if(getTopActivity().equals("com.zzteck.msafe.activity.RecordActivity")){
+						Intent intent2 = new Intent("audiorecord") ;
+						sendBroadcast(intent2);
+					}else{
+						KeyFunctionUtil.getInstance(mContext).actionKeyFunction(mContext,8);
+					}
+
+
+				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 录音
+
 					if(getTopActivity().equals("com.zzteck.msafe.activity.AntilostCameraActivity")){
 						Intent intent2 = new Intent("takepicture") ;
 						sendBroadcast(intent2);
 					}else{
 
-                        if((int)SharePerfenceUtil.getParam(mContext,"camera",0) == 0){
-                            Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
-                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
-                            startActivity(intent1);
-                        }else{
-                            showDialog() ;
-                        }
+						if((int)SharePerfenceUtil.getParam(mContext,"camera",0) == 0){
+							Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
+							intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
+							startActivity(intent1);
+						}else{
+							showDialog() ;
+						}
 
-                    }
-
-				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 录音
-
-					if(getTopActivity().equals("com.zzteck.msafe.activity.RecordActivity")){
-						Intent intent2 = new Intent("audiorecord") ;
-						sendBroadcast(intent2);
-					}else{
-                        KeyFunctionUtil.getInstance(mContext).actionKeyFunction(mContext,8);
-                    }
+					}
 
 				}else {
 					progressClickStatic();

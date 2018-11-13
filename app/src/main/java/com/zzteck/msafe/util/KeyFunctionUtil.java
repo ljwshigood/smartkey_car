@@ -183,7 +183,7 @@ public class KeyFunctionUtil {
 		}
 	};
 	
-	private MediaPlayer mMediaPlayer = null; ;
+	private MediaPlayer mMediaPlayer = null;
 	
 	private void createMediaPlayer(int id, float volume) {
 		
