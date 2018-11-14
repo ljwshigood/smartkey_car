@@ -1,9 +1,5 @@
 
 package com.zzteck.msafe.activity;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -18,23 +14,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -56,9 +48,14 @@ import com.zzteck.msafe.impl.IDismissListener;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
 import com.zzteck.msafe.view.FollowProgressDialog;
-import com.zzteck.msafe.view.SystemHintsDialog;
 
+import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -234,6 +231,8 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			return;
 		}
 
+		EventBus.getDefault().register(this);
+
 		setContentView(R.layout.activity_device_scan);
 		mLvBlueDevice = (ListView) findViewById(R.id.lv_scan_device);
 		mContext = this ;
@@ -253,7 +252,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
 				if(AppContext.mHashMapConnectGatt.size() > 0){
-					Toast.makeText(mContext, mContext.getString(R.string.already_one_device_conncect), 1).show();
+					Toast.makeText(mContext, mContext.getString(R.string.already_one_device_conncect), Toast.LENGTH_SHORT).show();
 					return ;
 				}
 
@@ -271,8 +270,15 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 								if (deviceSetInfo == null)
 									return;
 
-								Intent intent = new Intent(mContext,DeviceDeleteActivity.class) ;
-								startActivity(intent);
+								if (AppContext.mBluetoothLeService == null) {
+									return;
+								}
+								mDatabaseManager.deleteAllDeviceInfo(deviceSetInfo.getmDeviceAddress());
+								AppContext.mBluetoothLeService.close();
+								finish();
+
+							/*	Intent intent = new Intent(mContext,DeviceDeleteActivity.class) ;
+								startActivity(intent);*/
 							}
 						});
 						mSystemDialog.show();
@@ -341,7 +347,6 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	private void initView() {
 		mLlRefresh = (LinearLayout)findViewById(R.id.ll_refresh) ;
 		mRlTitle = (RelativeLayout)findViewById(R.id.rl_title);
-		mRlTitle.setBackgroundResource(R.drawable.bg_scanning);
 		mLLInfo = (LinearLayout)findViewById(R.id.ll_info);
 		mIvBack = (ImageView) findViewById(R.id.iv_back);
 		mIvBack.setOnClickListener(this);
@@ -382,6 +387,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			mDialogProgress = null;
 		}
 		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override
@@ -642,7 +648,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ll_refresh:
-			Toast.makeText(getApplicationContext(),"refresh",1).show();
+			Toast.makeText(getApplicationContext(),"refresh",Toast.LENGTH_SHORT).show();
 			mBluetoothAdapter.startLeScan(mLeScanCallback);
 			break ;
 		case R.id.iv_back:

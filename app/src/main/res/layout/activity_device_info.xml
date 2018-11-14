@@ -10,7 +10,7 @@
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/bg_title">
+        android:background="@drawable/bg_record">
 
         <LinearLayout
             android:id="@+id/rl_title_info"
@@ -46,7 +46,7 @@
                     android:id="@+id/tv_device_scan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/device_list"
+                    android:text="@string/device_info"
                     android:textColor="@android:color/white"
                     android:textSize="20dp" />
             </LinearLayout>
