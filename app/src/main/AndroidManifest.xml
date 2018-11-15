@@ -141,7 +141,8 @@
         <activity android:name=".activity.DeviceInfoActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" ></activity>
         <activity android:name=".activity.FeedBackActivity"></activity>
-        <activity android:name=".activity.AboutMeActivity"></activity>
+        <activity android:name=".activity.AboutMeActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" ></activity>
         <activity
             android:name="com.zzteck.msafe.activity.FlashActivity"
             android:launchMode="singleInstance"

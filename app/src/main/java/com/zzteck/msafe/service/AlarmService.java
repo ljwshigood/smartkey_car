@@ -330,7 +330,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 		registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
 
 		Log.e("liujw", "######################alarmServcie : oncreate");
-		
+
 		mTotalTimer = new Timer(true);
 		
 		setUpLocationClientIfNeeded();
@@ -499,9 +499,9 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			if(AppContext.mBluetoothLeService != null){
 				AppContext.mBluetoothLeService.readBatteryCharacteristic();
 				AppContext.mBluetoothLeService.getRssiVal() ;
-				Toast.makeText(mContext,"########################rssi : "+AppContext.mBluetoothLeService.getRssiVal(),1).show() ;
+				//Toast.makeText(mContext,"########################rssi : "+AppContext.mBluetoothLeService.getRssiVal(),1).show() ;
 			}
-			mAlarmHandler.sendEmptyMessage(0) ;
+		//	mAlarmHandler.sendEmptyMessage(0) ;
 		}
 	} ;
 
@@ -586,9 +586,8 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				if (AppContext.mBluetoothLeService != null) {
 					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}
-				
-				DatabaseManager.getInstance(mContext).updateDeviceConnect(address);
-				
+
+				DatabaseManager.getInstance(mContext).updateDeviceConnect(address,1);
 				dismissBleActivity();
 				Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
 				intentDistance.putExtra("control", 2);

@@ -273,7 +273,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 								if (AppContext.mBluetoothLeService == null) {
 									return;
 								}
-								mDatabaseManager.deleteAllDeviceInfo(deviceSetInfo.getmDeviceAddress());
+								DatabaseManager.getInstance(mContext).deleteAllDeviceInfo(deviceSetInfo.getmDeviceAddress());
 								AppContext.mBluetoothLeService.close();
 								finish();
 

@@ -430,7 +430,6 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 		mIvAlarm = (ImageView)findViewById(R.id.iv_alarm);
 		mPbbar = (ProgressBar)findViewById(R.id.pb_connect_device);
 		mLLContent = (LinearLayout) findViewById(R.id.ll_content);
-		mRlTitle.setBackgroundResource(R.drawable.bg_device_list) ;
 
 		mCbDisturb.setOnClickListener(this);
 		

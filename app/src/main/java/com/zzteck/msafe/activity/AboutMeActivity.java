@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.zzteck.msafe.R;
 
 public class AboutMeActivity extends BaseActivity implements OnClickListener {
 
+	private ImageView mIvMore ;
 
 	@Override
 	protected void onDestroy() {
@@ -26,6 +28,8 @@ public class AboutMeActivity extends BaseActivity implements OnClickListener {
 
 	
 	private void initView() {
+		mIvMore = findViewById(R.id.iv_more) ;
+		mIvMore.setVisibility(View.GONE) ;
 	}
 
 	@Override
