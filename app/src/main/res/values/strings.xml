@@ -208,6 +208,7 @@
     <string name="device_info">Device Info</string>
     <string name="antilost">ANTILOST</string>
     <string name="maunal">Manual</string>
+    <string name="alarm">alarm</string>
     <string name="call_people">Make a phone call</string>
     <string name="from_to">From \n to</string>
     <string name="maunal_tip">When Do Not Disturb is enabled will be set to mute the alarm at the set time.</string>
