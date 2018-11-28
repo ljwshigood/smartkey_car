@@ -3,8 +3,10 @@ package com.zzteck.msafe.application;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
@@ -63,6 +65,16 @@ public class AppContext extends Application {
 	public static boolean isFlash = true;
 
 	private static Context mContext ;
+
+	public static List<Activity> mActivityList = new ArrayList<Activity>() ;
+
+	public static void addActivityList(Activity activity){
+		mActivityList.add(activity) ;
+	}
+
+	public static void clearActivity(){
+		mActivityList.clear();
+	}
 
 	@Override
 	public void onCreate() {

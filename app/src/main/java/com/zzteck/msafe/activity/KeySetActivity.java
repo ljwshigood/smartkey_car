@@ -75,10 +75,11 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 	protected void onDestroy() {
 		super.onDestroy();
 		mHandler.removeMessages(0);
-		isContinue = false ;
+		mHandler.removeCallbacksAndMessages(null);
+		//isContinue = false ;
 	}
 
-	private boolean isContinue  = true ;
+	//private boolean isContinue  = true ;
 
 	private Handler mHandler = new Handler(){
 
@@ -86,9 +87,9 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			if(!isContinue){
+			/*if(!isContinue){
 				return ;
-			}
+			}*/
 
 			if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
 				mIvMenuPower.setImageResource(R.drawable.ic_connect);

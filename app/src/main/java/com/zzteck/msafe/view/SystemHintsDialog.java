@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -35,6 +37,17 @@ public class SystemHintsDialog extends BaseActivity {
 
    private int mType ;
 
+   private Handler mHandler = new Handler(){
+       @Override
+       public void handleMessage(Message msg) {
+           super.handleMessage(msg);
+           Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
+           intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
+           startActivity(intent1);
+           finish();
+       }
+   } ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +69,8 @@ public class SystemHintsDialog extends BaseActivity {
             public void onClick(View v) {
 
                 if(mType == 0){
-                    KeyFunctionUtil.getInstance(mContext).releaseCamera() ;
-                    Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
-                    startActivity(intent1);
-                    finish();
+                    KeyFunctionUtil.getInstance(mContext).turnOffFlash() ;
+                    mHandler.sendEmptyMessageDelayed(0,1000) ;
                 }else{
                     KeyFunctionUtil.getInstance(mContext).processCamera(true);
                     mContext.sendBroadcast(new Intent(Constant.FINISH));

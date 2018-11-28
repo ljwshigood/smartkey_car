@@ -275,7 +275,7 @@ public class RecordManager {
 		}
 	}
 
-	protected int  recodeStop() {
+	public int  recodeStop() {
 		if (mMediaRecorder != null) {
 			mMediaRecorder.stop();
 			mMediaRecorder.release();
@@ -351,7 +351,12 @@ public class RecordManager {
 	 * @descripton: 只调用一次
 	 */
 	public int startRecord() {
-		start();
+		try {
+			start();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 		return 0 ;
 	}
 }

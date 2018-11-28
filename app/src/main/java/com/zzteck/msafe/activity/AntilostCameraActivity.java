@@ -112,6 +112,7 @@ public class AntilostCameraActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		AppContext.clearActivity();
 		unregisterReceiver(mFinishReceiver);
 		AppContext.isAlarm = true ;
 		SharePerfenceUtil.setParam(AntilostCameraActivity.this,"camera",0) ;
@@ -121,6 +122,8 @@ public class AntilostCameraActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		//KeyFunctionUtil.getInstance(AntilostCameraActivity.this).releaseCamera() ;
+
+		AppContext.addActivityList(this);
 
 		AppContext.isAlarm = false ;
     	long time_s = System.currentTimeMillis();

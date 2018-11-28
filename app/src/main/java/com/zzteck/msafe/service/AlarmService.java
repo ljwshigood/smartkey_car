@@ -2,6 +2,7 @@ package com.zzteck.msafe.service;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;
@@ -41,6 +42,7 @@ import com.zzteck.msafe.R;
 import com.zzteck.msafe.activity.AntilostCameraActivity;
 import com.zzteck.msafe.activity.KeySetActivity;
 import com.zzteck.msafe.activity.MainFollowActivity;
+import com.zzteck.msafe.activity.RecordActivity;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
@@ -126,6 +128,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	}
 	
 	private void progressClickStatic(){
+		Log.e("liujw","###########################progressClickStatic");
 		try {
 			
 			//KeySetBean bean = DatabaseManager.getInstance(mContext).selectKeySetByCount(mClickCount);
@@ -548,7 +551,18 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				}
 
 				mClickCount = 0 ;
-				if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A1 E5")){ // 拍照
+				if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A1 E5")){ // 录音
+
+					Log.e("liujw","###########################录音");
+
+					//如果当前是录音界面 ，则把录音界面关闭
+
+					if(AppContext.mActivityList.size() > 0){
+						Activity activity = AppContext.mActivityList.get(AppContext.mActivityList.size() - 1) ;
+						if(activity instanceof  AntilostCameraActivity){
+							activity.finish();
+						}
+					}
 
 					if(getTopActivity().equals("com.zzteck.msafe.activity.RecordActivity")){
 						Intent intent2 = new Intent("audiorecord") ;
@@ -558,7 +572,18 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 					}
 
 
-				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 录音
+				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 拍照
+
+					Log.e("liujw","###########################拍照");
+
+					// 如果当前是拍照界面，则把拍照界面关闭
+					if(AppContext.mActivityList.size() > 0){
+						Activity activity = AppContext.mActivityList.get(AppContext.mActivityList.size() - 1) ;
+						if(activity instanceof RecordActivity){
+							AppContext.mActivityList.get(AppContext.mActivityList.size() - 1).finish();
+						}
+					}
+
 
 					if(getTopActivity().equals("com.zzteck.msafe.activity.AntilostCameraActivity")){
 						Intent intent2 = new Intent("takepicture") ;

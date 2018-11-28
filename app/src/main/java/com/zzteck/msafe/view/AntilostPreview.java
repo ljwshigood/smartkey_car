@@ -3666,8 +3666,12 @@ public class AntilostPreview extends SurfaceView implements SurfaceHolder.Callba
 		if( MyDebug.LOG )
 			Log.d(TAG, "cancelAutoFocus");
         if( camera != null ) {
-    		camera.cancelAutoFocus();
-    		autoFocusCompleted(false, false, true);
+        	try{
+				camera.cancelAutoFocus();
+				autoFocusCompleted(false, false, true);
+			}catch (Exception e){
+        		e.printStackTrace();
+			}
         }
     }
     
@@ -4083,7 +4087,7 @@ public class AntilostPreview extends SurfaceView implements SurfaceHolder.Callba
     }
     
     private void updateParametersFromLocation() {
-    	if( camera != null ) {
+    	/*if( camera != null ) {
     		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
     		boolean store_location = sharedPreferences.getBoolean("preference_location", false);
     		// Android camera source claims we need to check lat/long != 0.0d
@@ -4128,7 +4132,7 @@ public class AntilostPreview extends SurfaceView implements SurfaceHolder.Callba
 	            this.has_set_location = false;
 	    		has_received_location = false;
     		}
-    	}
+    	}*/
     }
 	
 	public boolean isVideo() {
