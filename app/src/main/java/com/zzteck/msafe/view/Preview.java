@@ -2586,6 +2586,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void switchCamera() {
+		//int a = Camera.CameraInfo.CAMERA_FACING_FRONT ;
 		// if( is_taking_photo && !is_taking_photo_on_timer ) {
 		if (this.phase == PHASE_TAKING_PHOTO) {
 			// just to be safe - risk of cancelling the autofocus before taking

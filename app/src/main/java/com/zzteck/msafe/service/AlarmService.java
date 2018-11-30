@@ -29,6 +29,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -428,11 +429,19 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
 		@Override
-		public void onLeScan(final BluetoothDevice device, int rssi,
-				byte[] scanRecord) {
+		public void onLeScan(final BluetoothDevice device, int rssi,byte[] scanRecord) {
 			new Thread() {
 				public void run() {
-					mDeviceList = mDatabaseManager.selectDeviceInfo();
+
+					String deviceAddress = (String) SharePerfenceUtil.getParam(mContext,"device_address","");
+
+					if(!TextUtils.isEmpty(deviceAddress) && device.getAddress().equals(deviceAddress)){
+						if (AppContext.mBluetoothLeService != null) {
+							AppContext.mBluetoothLeService.connect(device.getAddress());
+						}
+					}
+
+					/*mDeviceList = mDatabaseManager.selectDeviceInfo();
 					for (int i = 0; i < mDeviceList.size(); i++) {
 						DeviceSetInfo info = mDeviceList.get(i);
 						String address = info.getmDeviceAddress();
@@ -442,7 +451,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 							}
 							break;
 						}
-					}
+					}*/
 				};
 			}.start();
 		}
@@ -500,8 +509,8 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			super.handleMessage(msg);
 
 			if(AppContext.mBluetoothLeService != null){
-				AppContext.mBluetoothLeService.readBatteryCharacteristic();
-				AppContext.mBluetoothLeService.getRssiVal() ;
+				//AppContext.mBluetoothLeService.readBatteryCharacteristic();
+				//AppContext.mBluetoothLeService.getRssiVal() ;
 				//Toast.makeText(mContext,"########################rssi : "+AppContext.mBluetoothLeService.getRssiVal(),1).show() ;
 			}
 		//	mAlarmHandler.sendEmptyMessage(0) ;
