@@ -84,7 +84,7 @@ public class RecordActivity extends Activity implements OnClickListener {
 		AppContext.isAlarm = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record);
-		
+		AppContext.activityList.add(this) ;
 		getIntentData();
 		mContext = RecordActivity.this;
 		mRecordManger = RecordManager.getInstance(mContext);
@@ -229,15 +229,20 @@ public class RecordActivity extends Activity implements OnClickListener {
 
 	private int saveRecord() {
 		int ret = 0 ;
-		ret = mRecordManger.saveRecord();
-		mIvRecordMenu.setBackgroundResource(R.drawable.ic_record_menu_nomal);
-		mIvRecord.setBackgroundResource(R.drawable.ic_record);
-		isSave = true;
-		if (timer != null) {
-			timer.cancel();
+		try{
+			ret = mRecordManger.saveRecord();
+			mIvRecordMenu.setBackgroundResource(R.drawable.ic_record_menu_nomal);
+			mIvRecord.setBackgroundResource(R.drawable.ic_record);
+			isSave = true;
+			if (timer != null) {
+				timer.cancel();
+			}
+			minute = 0;
+			second = 0;
+		}catch (Exception e){
+			e.printStackTrace();
 		}
-		minute = 0;
-		second = 0;
+
 		//mTvTime.setText("00:00");
 		return ret ;
 	}

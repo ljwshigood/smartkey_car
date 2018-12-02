@@ -1131,9 +1131,9 @@ public class BackgroundCameraActivity extends Activity implements WebManager.ICo
 	public void pareComplete() {
 		
 		if(mCameraInfo.getFront() == 1){
-			this.preview.setCameraId(1);
-		}else{
 			this.preview.setCameraId(0);
+		}else{
+			this.preview.setCameraId(1);
 		}
 	}
 

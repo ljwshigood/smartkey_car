@@ -30,7 +30,6 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -50,7 +49,6 @@ import com.zzteck.msafe.bean.KeySetBean;
 import com.zzteck.msafe.bean.MsgEvent;
 import com.zzteck.msafe.bean.SoundInfo;
 import com.zzteck.msafe.db.DatabaseManager;
-import com.zzteck.msafe.impl.ComfirmListener;
 import com.zzteck.msafe.util.AlarmManager;
 import com.zzteck.msafe.util.Constant;
 import com.zzteck.msafe.util.KeyFunctionUtil;
@@ -295,8 +293,8 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 			@Override
 			public void onServiceConnected(ComponentName componentName,IBinder service) {
-				AppContext.mBluetoothLeService = ((bluetoothLeService_a.LocalBinder) service).getService();
-				
+				AppContext.mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+				//AppContext.mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
 				Log.e("AlarmService","####################onServiceConnected");
 
 				if (!AppContext.mBluetoothLeService.initialize()) {
@@ -319,7 +317,8 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	public void onCreate() {
 		
 		//Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-		Intent gattServiceIntent = new Intent(this, bluetoothLeService_a.class);
+
+		Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
 		isBind = this.getApplicationContext().bindService(gattServiceIntent,mServiceConnection, BIND_AUTO_CREATE);
 		
 		mContext = AlarmService.this;
@@ -517,15 +516,26 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			final String action = intent.getAction();
 			mIntent = intent ;
 			String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+			//if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
 			if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
 
 				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_DISCONNECTED ",1).show();
+
+				EventBus.getDefault().post(new MsgEvent("",5));
+
+				AppContext.mBluetoothLeService.disconnect();
+				AppContext.mBluetoothLeService.close();
 
 				mDatabaseManager.updateDeviceConnect(address,0);
 				mClickCount = 0 ;
 				cancelClickTimer();
 				cancelStaticClickTimer();
 
+				KeyFunctionUtil.getInstance(mContext).releaseCamera();
+				KeyFunctionUtil.getInstance(mContext).releaseMediaPlayer();
+
+
+			//} else if (BluetoothLeService.ACTION_GATT_RSSI.equals(action)) { // 超距离报警
 			} else if (BluetoothLeService.ACTION_GATT_RSSI.equals(action)) { // 超距离报警
 
 				List<KeySetBean> mListKeySet = DatabaseManager.getInstance(mContext).selectKeySet();
@@ -546,6 +556,13 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 				String hexString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA) ;
 				String isVibrate = (String) SharePerfenceUtil.getParam(mContext,"vibrate","0");
+
+
+
+				if(getTopActivity().equals("com.zzteck.msafe.view.SystemHintsDialog")){
+					return  ;
+				}
+
 				if(isVibrate.equals("1")){
 					vibrator.vibrate(200);
 				}
@@ -563,12 +580,16 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 拍照
 
+
 					if(getTopActivity().equals("com.zzteck.msafe.activity.AntilostCameraActivity")){
 						Intent intent2 = new Intent("takepicture") ;
 						sendBroadcast(intent2);
 					}else{
 						Log.e("liujw","##############################(int)SharePerfenceUtil.getParam camera  ： "+(int)SharePerfenceUtil.getParam(mContext,"camera",0));
-						Log.e("liujw","##############################(int)SharePerfenceUtil.getParam camera  ： "+(int)SharePerfenceUtil.getParam(mContext,"camera",0));
+						for(int i = 0 ;i < AppContext.activityList.size();i++){
+							AppContext.activityList.get(i).finish();
+						}
+						AppContext.activityList.clear();
 						if((int)SharePerfenceUtil.getParam(mContext,"camera",0) == 0){
 							Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
 							intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
@@ -607,7 +628,9 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}
 
-				DatabaseManager.getInstance(mContext).updateDeviceConnect(address,1);
+				//DatabaseManager.getInstance(mContext).updateDeviceConnect(address,1);
+				saveDatabaseAndStartActivity(address,"FD-3") ;
+
 				dismissBleActivity();
 				Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
 				intentDistance.putExtra("control", 2);
@@ -616,6 +639,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				
 				AppContext.mNotificationBean.setShowNotificationDialog(false);
 				
+			//}else if(BluetoothLeService.ACTION_READ_DATA_AVAILABLE.equals(action)){
 			}else if(BluetoothLeService.ACTION_READ_DATA_AVAILABLE.equals(action)){
 				byte[] msg = intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA);
 				if (msg != null) {
@@ -631,6 +655,44 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			}
 		}
 	};
+
+	private void saveDatabaseAndStartActivity(String address,String name) {
+		mDatabaseManager = DatabaseManager.getInstance(mContext);
+		//mDatabaseManager.deleteAllDeviceInfo();
+		// query mac address
+		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(address);
+		if (deviceList.size() == 0) {
+			DeviceSetInfo info = new DeviceSetInfo();
+			info.setDistanceType(2);
+			info.setDisturb(false);
+			info.setFilePath(null);
+			info.setLocation(true);
+			info.setmDeviceAddress(address);
+			info.setmDeviceName(name);
+			info.setConnected(true);
+			info.setVisible(false);
+			info.setActive(true);
+			info.setLat(String.valueOf(AppContext.mLatitude));
+			info.setLng(String.valueOf(AppContext.mLongitude));
+			DisturbInfo disturbInfo = new DisturbInfo();
+			disturbInfo.setDisturb(false);
+			disturbInfo.setEndTime("23:59");
+			disturbInfo.setStartTime("00:00");
+			SoundInfo soundInfo = new SoundInfo();
+			soundInfo.setDurationTime(180);
+			soundInfo.setRingId(R.raw.crickets);
+			soundInfo.setRingName(mContext.getString(R.string.ringset_qsmusic));
+			soundInfo.setShock(true);
+			mDatabaseManager.insertDeviceInfo(address, info);
+			mDatabaseManager.insertDisurbInfo(address, disturbInfo);
+			mDatabaseManager.insertSoundInfo(address, soundInfo);
+
+		}else{ // 修改连接
+			mDatabaseManager.updateDeviceConnect(address,1);
+		}
+		mBluetoothAdapter.stopLeScan(mLeScanCallback);
+	}
+
 
 	public String getTopActivity(){
 		ActivityManager activityManager =( ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -707,6 +769,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	}
 
 	private void progressTopTaskRssi(Intent intent) {
+		//int  rssi = intent.getIntExtra(BluetoothLeService.EXTRA_DATA, 0);
 		int  rssi = intent.getIntExtra(BluetoothLeService.EXTRA_DATA, 0);
 		String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
 		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(address);
@@ -743,6 +806,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	}
 	
 	private void progressRssi(Intent intent) {
+	//	int rssi = intent.getIntExtra(BluetoothLeService.EXTRA_DATA, 0);
 		int rssi = intent.getIntExtra(BluetoothLeService.EXTRA_DATA, 0);
 		String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
 		ArrayList<DeviceSetInfo> deviceList = mDatabaseManager.selectDeviceInfo(address);

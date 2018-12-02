@@ -96,6 +96,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			final String action = intent.getAction();
+			//if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 			if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 				String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
 				
@@ -105,11 +106,13 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				if (mDialogProgress != null) {
 					mDialogProgress.dismiss();
 				}
-				
+
+				mHandler.removeMessages(0);
+
 				if (AppContext.mBluetoothLeService != null) {
 					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}
-			}else if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
+			//}else if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
 				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_CONNECTED ",1).show();
 			}
 		}
@@ -203,6 +206,19 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 
 	private ArrayList<Category> listData = new ArrayList<Category>();
 
+
+	private boolean isConnectDevice2(Context context ,String address){
+		ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(context).selectDeviceInfo(address);
+		boolean isExist = false ;
+		for(int i = 0;i < deviceList.size();i++){
+			DeviceSetInfo info = deviceList.get(i) ;
+			if(info.getmDeviceAddress().equals(address)){
+				isExist = true ;
+				break ;
+			}
+		}
+		return isExist ;
+	}
 
 	private boolean isConnectDevice(Context context ,String address){
 		ArrayList<DeviceSetInfo> deviceList = DatabaseManager.getInstance(context).selectDeviceInfo(address);
@@ -309,26 +325,35 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 						mSystemDialog.show();
 					}else {
 
-						SystemHintsDialog_dialog mSystemDialog = new SystemHintsDialog_dialog(mContext, "要与" + deviceSetInfo.getmDeviceName() + "配对吗", mContext.getString(R.string.cancel), mContext.getString(R.string.ok), 0);
-						mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
-							@Override
-							public void dialogOk() {
-
-								if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
-									Toast.makeText(mContext, mContext.getString(R.string.already_one_device_conncect), Toast.LENGTH_SHORT).show();
-									return ;
-								}
-
-								if (deviceSetInfo == null)
-									return;
-								if (AppContext.mBluetoothLeService != null) {
-									mDevice = deviceSetInfo;
-									AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
-								}
-								showProgressBarDialog();
+						if(isConnectDevice2(mContext,deviceSetInfo.getmDeviceAddress())){
+							if (AppContext.mBluetoothLeService != null) {
+								mDevice = deviceSetInfo;
+								AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
 							}
-						});
-						mSystemDialog.show();
+							showProgressBarDialog();
+						}else {
+
+							SystemHintsDialog_dialog mSystemDialog = new SystemHintsDialog_dialog(mContext, "要与" + deviceSetInfo.getmDeviceName() + "配对吗", mContext.getString(R.string.cancel), mContext.getString(R.string.ok), 0);
+							mSystemDialog.setmIDialogListener(new SystemHintsDialog_dialog.IDialogListener() {
+								@Override
+								public void dialogOk() {
+
+									if (AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()) {
+										Toast.makeText(mContext, mContext.getString(R.string.already_one_device_conncect), Toast.LENGTH_SHORT).show();
+										return;
+									}
+
+									if (deviceSetInfo == null)
+										return;
+									if (AppContext.mBluetoothLeService != null) {
+										mDevice = deviceSetInfo;
+										AppContext.mBluetoothLeService.connect(deviceSetInfo.getmDeviceAddress());
+									}
+									showProgressBarDialog();
+								}
+							});
+							mSystemDialog.show();
+						}
 					}
 				}
 			}
@@ -466,7 +491,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	private DatabaseManager mDatabaseManager;
 
 	private void saveDatabaseAndStartActivity() {
-		if(mDevice == null){
+		/*if(mDevice == null){
 			return ;
 		}
 		mDatabaseManager = DatabaseManager.getInstance(mContext);
@@ -503,12 +528,12 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		}else{ // 修改连接
 			mDatabaseManager.updateDeviceConnect(mDevice.getmDeviceAddress(),1);
 		}
+*/
 
-
-		if (mScanning) {
+		//if (mScanning) {
 			mBluetoothAdapter.stopLeScan(mLeScanCallback);
-			mScanning = false;
-		}
+		//	mScanning = false;
+		//}
 		Intent intent = new Intent(mContext, DeviceDisplayActivity.class);
 		intent.putExtra(DeviceDisplayActivity.EXTRAS_DEVICE_NAME,mDevice.getmDeviceName());
 		intent.putExtra(DeviceDisplayActivity.EXTRAS_DEVICE_ADDRESS,mDevice.getmDeviceAddress());
@@ -522,9 +547,10 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	private void showProgressBarDialog() {
 		String info = mContext.getString(R.string.device_connected_title);
 		mDialogProgress = new FollowProgressDialog(mContext, R.style.MyDialog,info);
+		mDialogProgress.setCancelable(false);
 		mDialogProgress.show();
 
-		mHandler.sendEmptyMessageDelayed(0,10000) ;
+		mHandler.sendEmptyMessageDelayed(0,30000) ;
 	}
 
 	// Device scan callback.

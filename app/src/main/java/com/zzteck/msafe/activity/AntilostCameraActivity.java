@@ -123,7 +123,9 @@ public class AntilostCameraActivity extends Activity {
 		//KeyFunctionUtil.getInstance(AntilostCameraActivity.this).releaseCamera() ;
 
 		AppContext.isAlarm = false ;
-    	long time_s = System.currentTimeMillis();
+    	long time_s = System.currentTimeMillis() ;
+    	AppContext.activityList.add(this) ;
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_antilost_camera);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);

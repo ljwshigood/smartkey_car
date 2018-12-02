@@ -1,10 +1,7 @@
 package com.zzteck.msafe.application;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
@@ -18,8 +15,11 @@ import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.NotificationBean;
 import com.zzteck.msafe.bean.alarmInfo;
 import com.zzteck.msafe.service.BluetoothLeService;
-import com.zzteck.msafe.service.bluetoothLeService_a;
-import com.zzteck.msafe.util.CrashHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AppContext extends Application {
 
@@ -42,7 +42,7 @@ public class AppContext extends Application {
 	public static int mCurrentTab = 0 ;
 	
 	//public static BluetoothLeService mBluetoothLeService;
-	public static bluetoothLeService_a mBluetoothLeService;
+	public static BluetoothLeService mBluetoothLeService;
 	
 	public static boolean isEndMusic ;
 	
@@ -65,6 +65,8 @@ public class AppContext extends Application {
 	public static boolean isFlash = true;
 
 	private static Context mContext ;
+
+	public static List<Activity> activityList =  new ArrayList<>() ;
 
 	@Override
 	public void onCreate() {

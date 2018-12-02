@@ -200,6 +200,13 @@ public class KeyFunctionUtil {
 	};
 	
 	private MediaPlayer mMediaPlayer = null;
+
+	public void  releaseMediaPlayer(){
+		if(mMediaPlayer != null && mMediaPlayer.isPlaying()){
+			mMediaPlayer.release();
+			mMediaPlayer = null;
+		}
+	}
 	
 	private void createMediaPlayer(int id) {
 		
@@ -261,12 +268,12 @@ public class KeyFunctionUtil {
 				case 0: // camera
 
 					mContext.sendBroadcast(new Intent(Constant.FINISH));
-					if(AppContext.isStart){
+					//if(AppContext.isStart){
 						intent = new Intent(mContext, BackgroundCameraActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						mContext.startActivity(intent);
 						AppContext.isStart = false ;
-					}
+				//	}
 					break;
 				case 1: // light
 					if(camera == null){
@@ -368,7 +375,11 @@ public class KeyFunctionUtil {
 					context.startActivity(intent);*/
 					break ;
 				case 8:
-					mContext.sendBroadcast(new Intent(Constant.FINISH));
+					//mContext.sendBroadcast(new Intent(Constant.FINISH));
+					for(int i = 0;i < AppContext.activityList.size();i++){
+						AppContext.activityList.get(i).finish();
+					}
+					AppContext.activityList.clear();
 					intent = new Intent(mContext,RecordActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.putExtra("flag", 1);

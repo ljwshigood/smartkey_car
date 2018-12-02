@@ -351,7 +351,11 @@ public class RecordManager {
 	 * @descripton: 只调用一次
 	 */
 	public int startRecord() {
-		start();
+		try{
+			start();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		return 0 ;
 	}
 }

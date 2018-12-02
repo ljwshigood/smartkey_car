@@ -274,9 +274,6 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.zzteck.msafe.service.bluetoothLeService_a"
-            android:enabled="true" >
-        </service>
     </application>
 
 </manifest>

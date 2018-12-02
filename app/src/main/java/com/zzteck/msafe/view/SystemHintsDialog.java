@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.activity.AntilostCameraActivity;
 import com.zzteck.msafe.activity.BaseActivity;
+import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.impl.ComfirmListener;
 import com.zzteck.msafe.util.Constant;
 import com.zzteck.msafe.util.KeyFunctionUtil;
@@ -53,8 +54,14 @@ public class SystemHintsDialog extends BaseActivity {
                     startActivity(intent1);
                     finish();
                 }else{
+
+                    for(int i = 0 ;i < AppContext.activityList.size();i++){
+                        AppContext.activityList.get(i).finish();
+                    }
+                    AppContext.activityList.clear();
+
                     KeyFunctionUtil.getInstance(mContext).processCamera(true);
-                    mContext.sendBroadcast(new Intent(Constant.FINISH));
+                    //mContext.sendBroadcast(new Intent(Constant.FINISH));
                     finish();
                 }
             }
