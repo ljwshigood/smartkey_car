@@ -48,6 +48,7 @@ import com.zzteck.msafe.dialog.SystemHintsDialog_dialog;
 import com.zzteck.msafe.impl.IDismissListener;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
+import com.zzteck.msafe.util.SharePerfenceUtil;
 import com.zzteck.msafe.view.FollowProgressDialog;
 
 import org.simple.eventbus.EventBus;
@@ -98,11 +99,9 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			final String action = intent.getAction();
 			//if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 			if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-				String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-				
-				Log.e("liujw","#########################ACTION_GATT_SERVICES_DISCOVERED");
 
-				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_SERVICES_DISCOVERED ",1).show();
+				String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+				Toast.makeText(getApplicationContext(),"ACTION_GATT_SERVICES_DISCOVERED : "+address,1).show();
 				if (mDialogProgress != null) {
 					mDialogProgress.dismiss();
 				}
@@ -112,8 +111,8 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				if (AppContext.mBluetoothLeService != null) {
 					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}
-			//}else if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
-				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_CONNECTED ",1).show();
+			}else if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
+				Toast.makeText(getApplicationContext(),"ACTION_GATT_CONNECTED",1).show();
 			}
 		}
 	};
@@ -557,13 +556,16 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
 		@Override
-		public void onLeScan(final BluetoothDevice device, int rssi,
-				byte[] scanRecord) {
+		public void onLeScan(final BluetoothDevice device, int rssi,byte[] scanRecord) {
+
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
+					if(device.getName() == null){
+						return ;
+					}
 					if(TextUtils.isEmpty(device.getName())){
 						return ;
 					}
@@ -571,14 +573,15 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 					if(DatabaseManager.getInstance(mContext).isExistDeviceInfo(device.getAddress())){
 						return ;
 					}
-					if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0){
+
+					if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0) {
 						List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
-						boolean isExist = false ;
-						for(int i = 0 ;i < list.size();i++){
-							String address = list.get(i).getmDeviceAddress() ;
-							if(address.equals(device.getAddress())){
-								isExist = true ;
-								break ;
+						boolean isExist = false;
+						for (int i = 0; i < list.size(); i++) {
+							String address = list.get(i).getmDeviceAddress();
+							if (address.equals(device.getAddress())) {
+								isExist = true;
+								break;
 							}
 						}
 						if(!isExist){
@@ -588,13 +591,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 							mCategoryScanner.addItem(bean) ;
 							mLeDeviceListAdapter.notifyDataSetChanged();
 						}
-					}else{
-						DeviceSetInfo bean = new DeviceSetInfo() ;
-						bean.setmDeviceAddress(device.getAddress()) ;
-						bean.setmDeviceName(device.getName()) ;
-						mCategoryScanner.addItem(bean) ;
-						listData.add(mCategoryScanner) ;
-						mLeDeviceListAdapter.notifyDataSetChanged();
+
 					}
 
 				}

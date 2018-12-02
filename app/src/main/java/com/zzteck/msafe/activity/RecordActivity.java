@@ -119,12 +119,15 @@ public class RecordActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		unregisterReceiver(mGattUpdateReceiver);
 		
 		if(wakeLock != null){
 			wakeLock.release();  
 		}
+
+		RecordManager.getInstance(mContext).recodeStop() ;
+
 		AppContext.isAlarm = true ;
 	}
 	
@@ -310,14 +313,15 @@ public class RecordActivity extends Activity implements OnClickListener {
 	private boolean isRecord = false;
 
 	private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			final String action = intent.getAction();
 			if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-			} else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
-					.equals(action)) {
-			} else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
-					.equals(action)) {
+
+			} else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+
+			} else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 
 			} else if (BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE.equals(action)) {
 		    /*	vibrator.vibrate(200);

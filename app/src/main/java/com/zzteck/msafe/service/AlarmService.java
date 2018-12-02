@@ -2,6 +2,7 @@ package com.zzteck.msafe.service;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;
@@ -29,6 +30,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ import com.zzteck.msafe.activity.AntilostCameraActivity;
 import com.zzteck.msafe.activity.DeviceDisplayActivity;
 import com.zzteck.msafe.activity.KeySetActivity;
 import com.zzteck.msafe.activity.MainFollowActivity;
+import com.zzteck.msafe.activity.RecordActivity;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
@@ -127,6 +130,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	}
 	
 	private void progressClickStatic(){
+		Log.e("liujw","###########################progressClickStatic");
 		try {
 			
 			//KeySetBean bean = DatabaseManager.getInstance(mContext).selectKeySetByCount(mClickCount);
@@ -428,11 +432,19 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
 		@Override
-		public void onLeScan(final BluetoothDevice device, int rssi,
-				byte[] scanRecord) {
+		public void onLeScan(final BluetoothDevice device, int rssi,byte[] scanRecord) {
 			new Thread() {
 				public void run() {
-					mDeviceList = mDatabaseManager.selectDeviceInfo();
+
+					String deviceAddress = (String) SharePerfenceUtil.getParam(mContext,"device_address","");
+
+					if(!TextUtils.isEmpty(deviceAddress) && device.getAddress().equals(deviceAddress)){
+						if (AppContext.mBluetoothLeService != null) {
+							AppContext.mBluetoothLeService.connect(device.getAddress());
+						}
+					}
+
+					/*mDeviceList = mDatabaseManager.selectDeviceInfo();
 					for (int i = 0; i < mDeviceList.size(); i++) {
 						DeviceSetInfo info = mDeviceList.get(i);
 						String address = info.getmDeviceAddress();
@@ -442,7 +454,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 							}
 							break;
 						}
-					}
+					}*/
 				};
 			}.start();
 		}
@@ -502,6 +514,8 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			if(AppContext.mBluetoothLeService != null){
 			//	AppContext.mBluetoothLeService.readBatteryCharacteristic();
 				AppContext.mBluetoothLeService.getRssiVal() ;
+				//AppContext.mBluetoothLeService.readBatteryCharacteristic();
+				//AppContext.mBluetoothLeService.getRssiVal() ;
 				//Toast.makeText(mContext,"########################rssi : "+AppContext.mBluetoothLeService.getRssiVal(),1).show() ;
 			}
 		//	mAlarmHandler.sendEmptyMessage(0) ;
@@ -556,8 +570,6 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 				String hexString = intent.getStringExtra(BluetoothLeService.EXTRA_DATA) ;
 				String isVibrate = (String) SharePerfenceUtil.getParam(mContext,"vibrate","0");
-
-
 
 				if(getTopActivity().equals("com.zzteck.msafe.view.SystemHintsDialog")){
 					return  ;

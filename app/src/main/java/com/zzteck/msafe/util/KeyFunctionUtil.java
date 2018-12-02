@@ -74,20 +74,18 @@ public class KeyFunctionUtil {
 		}
 		// play sound
 		if(!getTopActivity().equals("com.zzteck.msafe.activity.AntilostCameraActivity")){
-		/*	try{*/
 
-				/*if(camera != null){
-					camera.release();
-				}*/
+			try{
+				//camera.lock();
 				//params = camera.getParameters();
 				params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 				camera.setParameters(params);
 				camera.startPreview();
-
-
-			/*}catch (Exception e){
+			}catch (Exception e){
 				e.printStackTrace();
-			}*/
+			}finally {
+			}
+
 			SharePerfenceUtil.setParam(mContext,"camera",1) ;
 		}else{
 			showDialog() ;
@@ -128,21 +126,23 @@ public class KeyFunctionUtil {
 	}
 
 
-	private void turnOffFlash() {
+	public void turnOffFlash() {
 		if (camera == null || params == null) {
 			return;
 		}
-
-		/*try{*/
-		//	params = camera.getParameters();
+		try{
+			//camera.lock();
+			//params = camera.getParameters();
 			params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 			camera.setParameters(params);
+			//camera.unlock() ;
 			camera.stopPreview();
 			releaseCamera();
-		/*}catch (Exception e){
+		}catch (Exception e){
 			e.printStackTrace();
-		}*/
-
+		}finally {
+			releaseCamera();
+		}
 
 	}
 

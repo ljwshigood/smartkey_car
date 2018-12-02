@@ -195,7 +195,6 @@ public class BluetoothLeService extends Service {
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 			if (status == BluetoothGatt.GATT_SUCCESS) {
 				EventBus.getDefault().post(new MsgEvent("",6));
-				//broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
 				broadcastDeviceBleUpdate(ACTION_GATT_SERVICES_DISCOVERED,gatt.getDevice().getAddress());
 			} else {
 				Log.w(TAG, "onServicesDiscovered received: " + status);
@@ -237,6 +236,12 @@ public class BluetoothLeService extends Service {
 		intent.putExtra(EXTRA_DATA, rssi);
 		sendBroadcast(intent);
 	}
+
+	private void broadcastUpdateAndAddress(final String action,String address) {
+		final Intent intent = new Intent(action);
+		sendBroadcast(intent);
+	}
+
 
 	private void broadcastUpdate(final String action) {
 		final Intent intent = new Intent(action);

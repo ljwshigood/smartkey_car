@@ -3,6 +3,8 @@ package com.zzteck.msafe.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,7 +14,6 @@ import com.zzteck.msafe.activity.AntilostCameraActivity;
 import com.zzteck.msafe.activity.BaseActivity;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.impl.ComfirmListener;
-import com.zzteck.msafe.util.Constant;
 import com.zzteck.msafe.util.KeyFunctionUtil;
 
 
@@ -26,6 +27,17 @@ public class SystemHintsDialog extends BaseActivity {
     private ComfirmListener mListener;
 
    private int mType ;
+
+   private Handler mHandler = new Handler(){
+       @Override
+       public void handleMessage(Message msg) {
+           super.handleMessage(msg);
+           Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
+           intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
+           startActivity(intent1);
+           finish();
+       }
+   } ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +60,8 @@ public class SystemHintsDialog extends BaseActivity {
             public void onClick(View v) {
 
                 if(mType == 0){
-                    KeyFunctionUtil.getInstance(mContext).releaseCamera() ;
-                    Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
-                    startActivity(intent1);
-                    finish();
+                    KeyFunctionUtil.getInstance(mContext).turnOffFlash() ;
+                    mHandler.sendEmptyMessageDelayed(0,1000) ;
                 }else{
 
                     for(int i = 0 ;i < AppContext.activityList.size();i++){

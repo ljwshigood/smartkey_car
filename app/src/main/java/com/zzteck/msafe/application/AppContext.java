@@ -66,7 +66,15 @@ public class AppContext extends Application {
 
 	private static Context mContext ;
 
-	public static List<Activity> activityList =  new ArrayList<>() ;
+	public static List<Activity> activityList = new ArrayList<Activity>() ;
+
+	/*public static void addActivityList(Activity activity){
+		mActivityList.add(activity) ;
+	}
+
+	public static void clearActivity(){
+		mActivityList.clear();
+	}*/
 
 	@Override
 	public void onCreate() {

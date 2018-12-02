@@ -78,30 +78,10 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		isContinue = false ;
+		//isContinue = false ;
 		EventBus.getDefault().unregister(this);
 	}
 
-	private boolean isContinue  = true ;
-
-	/*private Handler mHandler = new Handler(){
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			if(!isContinue){
-				return ;
-			}
-
-			if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
-				mIvMenuPower.setImageResource(R.drawable.ic_connect);
-			}else{
-				mIvMenuPower.setImageResource(R.drawable.ic_ble_unconnect);
-			}
-			mHandler.sendEmptyMessageDelayed(0,1000) ;
-		}
-	} ;*/
 
 	@Subscriber
 	public void onEventMainThread(final MsgEvent event){
