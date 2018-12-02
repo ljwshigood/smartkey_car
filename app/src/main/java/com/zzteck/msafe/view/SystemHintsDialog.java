@@ -1,18 +1,9 @@
 package com.zzteck.msafe.view;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

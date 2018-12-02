@@ -26,6 +26,7 @@ import com.zzteck.msafe.adapter.KeySetAdapter.IKeyRemove;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.KeySetBean;
+import com.zzteck.msafe.bean.MsgEvent;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.impl.ComfirmListener;
 import com.zzteck.msafe.service.AlarmService;
@@ -36,6 +37,9 @@ import com.zzteck.msafe.util.PermissionUtils;
 import com.zzteck.msafe.view.FollowInfoDialog.IUpdateUI;
 import com.zzteck.msafe.view.NavPopWindows;
 import com.zzteck.msafe.view.SystemHintsDialog;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,8 +68,8 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 	protected void onPause() {
 		super.onPause();
 	}
-	
-	
+
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -74,13 +78,13 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mHandler.removeMessages(0);
 		isContinue = false ;
+		EventBus.getDefault().unregister(this);
 	}
 
 	private boolean isContinue  = true ;
 
-	private Handler mHandler = new Handler(){
+	/*private Handler mHandler = new Handler(){
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -97,13 +101,41 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 			}
 			mHandler.sendEmptyMessageDelayed(0,1000) ;
 		}
-	} ;
+	} ;*/
+
+	@Subscriber
+	public void onEventMainThread(final MsgEvent event){
+		if(event.getType() == 5){
+			if(AppContext.mBluetoothLeService != null){
+				boolean flag =  AppContext.mBluetoothLeService.isConnect() ;
+				if(flag == false){
+					mIvMenuPower.setImageResource(R.drawable.ic_ble_unconnect);
+				}
+			}
+
+		}else if(event.getType() == 6){
+			mIvMenuPower.setImageResource(R.drawable.ic_connect);
+		}
+
+		if(AppContext.mBluetoothLeService != null){
+			boolean flag =  AppContext.mBluetoothLeService.isConnect() ;
+			if(flag == false){
+				mIvMenuPower.setImageResource(R.drawable.ic_ble_unconnect);
+			}
+		}
+
+	}
 
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		sortKeySetList();
+		if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
+			mIvMenuPower.setImageResource(R.drawable.ic_connect);
+		}else{
+			mIvMenuPower.setImageResource(R.drawable.ic_ble_unconnect);
+		}
 	}
 
 	private ImageView mIvMenuPower ;
@@ -161,6 +193,8 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 				}
 		});
 
+		EventBus.getDefault().register(this);
+
 		Intent intent = new Intent(mContext, BgMusicControlService.class);
 		startService(intent);
 
@@ -186,8 +220,12 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 			}
 		}
 
-		mHandler.sendEmptyMessage(0) ;
-
+		//.sendEmptyMessage(0) ;
+		if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
+			mIvMenuPower.setImageResource(R.drawable.ic_connect);
+		}else{
+			mIvMenuPower.setImageResource(R.drawable.ic_ble_unconnect);
+		}
 	}
 
 	@Override
@@ -304,11 +342,11 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 	@Override
 	public void updateConnectStatus(int status) {
 		if(status == 0){
-			if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
+			/*if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
 				mKeySetAdapter.notifyKeySetStatusChange(mListKeySet,true);
 			}else{
 				mKeySetAdapter.notifyKeySetStatusChange(mListKeySet,false);
-			}
+			}*/
 		}
 	} 
 	

@@ -21,6 +21,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -39,6 +40,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.activity.AntilostCameraActivity;
+import com.zzteck.msafe.activity.DeviceDisplayActivity;
 import com.zzteck.msafe.activity.KeySetActivity;
 import com.zzteck.msafe.activity.MainFollowActivity;
 import com.zzteck.msafe.application.AppContext;
@@ -46,6 +48,7 @@ import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.bean.KeySetBean;
 import com.zzteck.msafe.bean.MsgEvent;
+import com.zzteck.msafe.bean.SoundInfo;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.impl.ComfirmListener;
 import com.zzteck.msafe.util.AlarmManager;
@@ -292,7 +295,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 			@Override
 			public void onServiceConnected(ComponentName componentName,IBinder service) {
-				AppContext.mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+				AppContext.mBluetoothLeService = ((bluetoothLeService_a.LocalBinder) service).getService();
 				
 				Log.e("AlarmService","####################onServiceConnected");
 
@@ -315,7 +318,8 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	@Override
 	public void onCreate() {
 		
-		Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+		//Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+		Intent gattServiceIntent = new Intent(this, bluetoothLeService_a.class);
 		isBind = this.getApplicationContext().bindService(gattServiceIntent,mServiceConnection, BIND_AUTO_CREATE);
 		
 		mContext = AlarmService.this;
@@ -404,7 +408,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				return ;
 			}
 			if(AppContext.mBluetoothLeService != null){
-				AppContext.mBluetoothLeService.readBatteryCharacteristic();
+			//	AppContext.mBluetoothLeService.readBatteryCharacteristic();
 			}
 			mHandlerAudioBattery.postDelayed(autoReadBatteryRunable, 3000);
 		}
@@ -497,7 +501,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			super.handleMessage(msg);
 
 			if(AppContext.mBluetoothLeService != null){
-				AppContext.mBluetoothLeService.readBatteryCharacteristic();
+			//	AppContext.mBluetoothLeService.readBatteryCharacteristic();
 				AppContext.mBluetoothLeService.getRssiVal() ;
 				//Toast.makeText(mContext,"########################rssi : "+AppContext.mBluetoothLeService.getRssiVal(),1).show() ;
 			}
@@ -515,10 +519,9 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
 			if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
 
-				mDatabaseManager.updateDeviceConnect(address,0);
-				//更新界面
-				EventBus.getDefault().post(new MsgEvent("",1));
+				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_DISCONNECTED ",1).show();
 
+				mDatabaseManager.updateDeviceConnect(address,0);
 				mClickCount = 0 ;
 				cancelClickTimer();
 				cancelStaticClickTimer();
@@ -548,7 +551,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				}
 
 				mClickCount = 0 ;
-				if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A1 E5")){ // 拍照
+				if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A1 E5")){ // 录音
 
 					if(getTopActivity().equals("com.zzteck.msafe.activity.RecordActivity")){
 						Intent intent2 = new Intent("audiorecord") ;
@@ -558,13 +561,14 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 					}
 
 
-				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 录音
+				}else if(hexString != null && hexString.trim().equals("E3 07 A1 01 01 A2 E5")){ // 拍照
 
 					if(getTopActivity().equals("com.zzteck.msafe.activity.AntilostCameraActivity")){
 						Intent intent2 = new Intent("takepicture") ;
 						sendBroadcast(intent2);
 					}else{
-
+						Log.e("liujw","##############################(int)SharePerfenceUtil.getParam camera  ： "+(int)SharePerfenceUtil.getParam(mContext,"camera",0));
+						Log.e("liujw","##############################(int)SharePerfenceUtil.getParam camera  ： "+(int)SharePerfenceUtil.getParam(mContext,"camera",0));
 						if((int)SharePerfenceUtil.getParam(mContext,"camera",0) == 0){
 							Intent intent1 = new Intent(mContext, AntilostCameraActivity.class) ;
 							intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
@@ -576,11 +580,27 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 					}
 
 				}else {
-					progressClickStatic();
+					if(getTopActivity().equals("com.zzteck.msafe.activity.AntilostCameraActivity")){
+						List<KeySetBean>  list = DatabaseManager.getInstance(mContext).selectKeySet() ;
+						if(list != null && list.size() > 0){
+							KeySetBean bean = list.get(0) ;
+							if(bean.getAction() == 1){
+								Intent intent1 = new Intent(mContext,SystemHintsDialog.class) ;
+								intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) ;
+								intent1.putExtra("type",1);
+								mContext.startActivity(intent1);
+							}else{
+								progressClickStatic();
+							}
+						}
+					}else {
+						progressClickStatic();
+					}
 				}
 
 			} else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-				
+
+				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_SERVICES_DISCOVERED ",1).show();
 				mHandler.removeCallbacks(mDisconnectRunnable);
 				mAlarmHandler.sendEmptyMessage(0) ;
 				if (AppContext.mBluetoothLeService != null) {
@@ -622,8 +642,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 
 	@SuppressLint("NewApi")
-	private void displayGattServices(List<BluetoothGattService> gattServices,
-			String address) {
+	private void displayGattServices(List<BluetoothGattService> gattServices,String address) {
 		if (gattServices == null) {
 			return;
 		}
@@ -645,12 +664,25 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 						mHandlerAudioBattery.removeCallbacks(autoReadBatteryRunable);
 						mHandlerAudioBattery.post(autoReadBatteryRunable);
 						AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
+						saveDatabaseAndStartActivity(address) ;
+
+						EventBus.getDefault().post(new MsgEvent("",8));
+
 					}
 				}
 			}
 			
 			
 		}
+	}
+
+
+	private void saveDatabaseAndStartActivity(String address) {
+		mDatabaseManager = DatabaseManager.getInstance(mContext);
+		//mDatabaseManager.deleteAllDeviceInfo();
+		// query mac address
+		mDatabaseManager.updateDeviceConnect(address,1);
+		mBluetoothAdapter.stopLeScan(mLeScanCallback);
 	}
 
 	private void progressDeviceDisconnect(Intent intent) {

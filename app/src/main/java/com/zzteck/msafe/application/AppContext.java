@@ -18,6 +18,7 @@ import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.NotificationBean;
 import com.zzteck.msafe.bean.alarmInfo;
 import com.zzteck.msafe.service.BluetoothLeService;
+import com.zzteck.msafe.service.bluetoothLeService_a;
 import com.zzteck.msafe.util.CrashHandler;
 
 public class AppContext extends Application {
@@ -40,7 +41,8 @@ public class AppContext extends Application {
 	
 	public static int mCurrentTab = 0 ;
 	
-	public static BluetoothLeService mBluetoothLeService;
+	//public static BluetoothLeService mBluetoothLeService;
+	public static bluetoothLeService_a mBluetoothLeService;
 	
 	public static boolean isEndMusic ;
 	

@@ -24,7 +24,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -40,7 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zzteck.msafe.R;
-import com.zzteck.msafe.adapter.DeviceAdapter;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
@@ -68,7 +66,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 
 	private Context mContext;
 
-	private DeviceAdapter mDeviceAdapter;
+	//private DeviceAdapter mDeviceAdapter;
 
 	public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
 
@@ -180,7 +178,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 				DeviceSetInfo info = mDeviceList.get(i);
 				info.setVisible(false);
 			}
-			mDeviceAdapter.notifyDataSetChanged();
+			//mDeviceAdapter.notifyDataSetChanged();
 		}
 	};
 
@@ -225,6 +223,8 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 	private ProgressBar mPbbar;
 
 	private CheckBox mCbDisturb;
+
+	private  ImageView mIvBack ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -323,7 +323,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 						.getCharacteristics();
 				for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 					if (gattCharacteristic.getUuid().toString().startsWith("0000ffe1")) {
-						AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
+					//	AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
 					}
 				}
 			}
@@ -334,13 +334,13 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 
 		mDeviceList = mDatabaseManager.selectDeviceInfo();
 		
-		if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
+		/*if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
 			if(mDeviceList != null && mDeviceList.size() > 0){
 				mDeviceSetInfo =  mDeviceList.get(0);
 				mDeviceSetInfo.setConnected(true);
 				mDeviceSetInfo.setVisible(false);
 			}
-		}
+		}*/
 
 		if (mDeviceSetInfo.isActive()) {
 			if (mDeviceSetInfo.isConnected()) {
@@ -369,7 +369,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 				if (mDeviceList.get(0).isActive()
 						&& mDeviceList.get(0).isConnected()) {
 					if (AppContext.mBluetoothLeService != null) {
-						AppContext.mBluetoothLeService.writeCharacter(mDeviceSetInfo.getmDeviceAddress());
+						//AppContext.mBluetoothLeService.writeCharacter(mDeviceSetInfo.getmDeviceAddress());
 					}
 				}
 
@@ -423,7 +423,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 	private LinearLayout mLLContent;
 
 	private void initView() {
-		
+		mIvBack =  findViewById(R.id.iv_back) ;
 		mRlTitle = findViewById(R.id.rl_title);
 		mCbDisturb = (CheckBox)findViewById(R.id.cb_disturb);
 		mTvDeviceInfo = (TextView) findViewById(R.id.tv_device_info);
@@ -432,7 +432,7 @@ public class DeviceInfoActivity extends BaseActivity implements OnClickListener,
 		mLLContent = (LinearLayout) findViewById(R.id.ll_content);
 
 		mCbDisturb.setOnClickListener(this);
-		
+		mIvBack.setOnClickListener(this);
 		if (mDatabaseManager.selectSingleDeviceInfo() != null) {
 			mLLContent.setVisibility(View.VISIBLE);
 		} else {

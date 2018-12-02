@@ -5,13 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -34,8 +29,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -55,14 +48,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zzteck.msafe.R;
-import com.zzteck.msafe.adapter.DeviceAdapter;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
-import com.zzteck.msafe.util.BlueGattManager;
 import com.zzteck.msafe.util.ImageTools;
 import com.zzteck.msafe.util.LocationUtils;
 import com.zzteck.msafe.view.FollowEditDialog;
@@ -76,7 +67,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 
 	private Context mContext;
 
-	private DeviceAdapter mDeviceAdapter;
+	//private DeviceAdapter mDeviceAdapter;
 
 	public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
 
@@ -188,7 +179,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 				DeviceSetInfo info = mDeviceList.get(i);
 				info.setVisible(false);
 			}
-			mDeviceAdapter.notifyDataSetChanged();
+			//mDeviceAdapter.notifyDataSetChanged();
 		}
 	};
 
@@ -331,7 +322,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 						.getCharacteristics();
 				for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 					if (gattCharacteristic.getUuid().toString().startsWith("0000ffe1")) {
-						AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
+						//AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
 					}
 				}
 			}
@@ -342,13 +333,13 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 
 		mDeviceList = mDatabaseManager.selectDeviceInfo();
 		
-		if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
+		/*if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
 			if(mDeviceList != null && mDeviceList.size() > 0){
 				mDeviceSetInfo =  mDeviceList.get(0);
 				mDeviceSetInfo.setConnected(true);
 				mDeviceSetInfo.setVisible(false);
 			}
-		}
+		}*/
 
 		if (mDeviceSetInfo.isActive()) {
 			if (mDeviceSetInfo.isConnected()) {
@@ -377,7 +368,7 @@ public class DeviceDisplayActivity extends BaseActivity implements OnClickListen
 				if (mDeviceList.get(0).isActive()
 						&& mDeviceList.get(0).isConnected()) {
 					if (AppContext.mBluetoothLeService != null) {
-						AppContext.mBluetoothLeService.writeCharacter(mDeviceSetInfo.getmDeviceAddress());
+						//AppContext.mBluetoothLeService.writeCharacter(mDeviceSetInfo.getmDeviceAddress());
 					}
 				}
 

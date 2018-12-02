@@ -1,8 +1,6 @@
 package com.zzteck.msafe.activity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothDevice;
@@ -16,25 +14,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Window;
 import android.view.WindowManager;
 
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
-import com.zzteck.msafe.bean.DisturbInfo;
 import com.zzteck.msafe.bean.NotificationBean;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.impl.ICallBack;
 import com.zzteck.msafe.service.BgMusicControlService;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
-import com.zzteck.msafe.util.BlueGattManager;
 import com.zzteck.msafe.util.Constant;
 import com.zzteck.msafe.util.ShakeListener;
 import com.zzteck.msafe.util.ShakeListener.OnShakeListener;
 import com.zzteck.msafe.view.FollowAlarmActivity;
-import com.zzteck.msafe.view.FollowInfoDialog;
 
 /**
  * @author liujw

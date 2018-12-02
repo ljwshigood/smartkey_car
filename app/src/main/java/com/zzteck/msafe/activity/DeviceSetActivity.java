@@ -45,14 +45,12 @@ import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.service.BluetoothLeService;
 import com.zzteck.msafe.util.AlarmManager;
-import com.zzteck.msafe.util.BlueGattManager;
 import com.zzteck.msafe.util.ImageTools;
 import com.zzteck.msafe.util.LocationUtils;
 import com.zzteck.msafe.view.FollowEditDialog;
 import com.zzteck.msafe.view.FollowEditDialog.ICallbackUpdateView;
 import com.zzteck.msafe.view.FollowInfoDialog;
 import com.zzteck.msafe.view.SelectPicPopupWindow;
-import com.zzteck.msafe.activity.BaseActivity;
 
 public class DeviceSetActivity extends BaseActivity implements OnClickListener,
 		ICallbackUpdateView {

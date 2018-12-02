@@ -18,18 +18,23 @@ public class AboutMeActivity extends BaseActivity implements OnClickListener {
 	protected void onDestroy() {
 		super.onDestroy();
 	}
+
+	private ImageView mIvBack ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about_me);
 		initView();
+		mIvBack.setVisibility(View.VISIBLE);
 	}
 
 	
 	private void initView() {
+		mIvBack = findViewById(R.id.iv_back) ;
 		mIvMore = findViewById(R.id.iv_more) ;
 		mIvMore.setVisibility(View.GONE) ;
+		mIvBack.setOnClickListener(this);
 	}
 
 	@Override
@@ -44,8 +49,10 @@ public class AboutMeActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		Intent intent;
 		switch (v.getId()) {
+			case  R.id.iv_back :
+				finish();
+				break;
 
 		default:
 			break;

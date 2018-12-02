@@ -24,7 +24,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -40,7 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zzteck.msafe.R;
-import com.zzteck.msafe.adapter.DeviceAdapter;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
@@ -68,7 +66,7 @@ public class DeviceDeleteActivity extends BaseActivity implements OnClickListene
 
 	private Context mContext;
 
-	private DeviceAdapter mDeviceAdapter;
+	//private DeviceAdapter mDeviceAdapter;
 
 	public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
 
@@ -180,7 +178,7 @@ public class DeviceDeleteActivity extends BaseActivity implements OnClickListene
 				DeviceSetInfo info = mDeviceList.get(i);
 				info.setVisible(false);
 			}
-			mDeviceAdapter.notifyDataSetChanged();
+		//	mDeviceAdapter.notifyDataSetChanged();
 		}
 	};
 
@@ -327,7 +325,7 @@ public class DeviceDeleteActivity extends BaseActivity implements OnClickListene
 						.getCharacteristics();
 				for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 					if (gattCharacteristic.getUuid().toString().startsWith("0000ffe1")) {
-						AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
+						//AppContext.mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
 					}
 				}
 			}
@@ -338,13 +336,13 @@ public class DeviceDeleteActivity extends BaseActivity implements OnClickListene
 
 		mDeviceList = mDatabaseManager.selectDeviceInfo();
 		
-		if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
+		/*if(AppContext.mBluetoothLeService != null && AppContext.mBluetoothLeService.isConnect()){
 			if(mDeviceList != null && mDeviceList.size() > 0){
 				mDeviceSetInfo =  mDeviceList.get(0);
 				mDeviceSetInfo.setConnected(true);
 				mDeviceSetInfo.setVisible(false);
 			}
-		}
+		}*/
 
 		if (mDeviceSetInfo.isActive()) {
 			if (mDeviceSetInfo.isConnected()) {
@@ -373,7 +371,7 @@ public class DeviceDeleteActivity extends BaseActivity implements OnClickListene
 				if (mDeviceList.get(0).isActive()
 						&& mDeviceList.get(0).isConnected()) {
 					if (AppContext.mBluetoothLeService != null) {
-						AppContext.mBluetoothLeService.writeCharacter(mDeviceSetInfo.getmDeviceAddress());
+					//	AppContext.mBluetoothLeService.writeCharacter(mDeviceSetInfo.getmDeviceAddress());
 					}
 				}
 

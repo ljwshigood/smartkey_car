@@ -32,7 +32,15 @@
                     android:layout_width="70dp"
                     android:layout_height="50dp"
                     android:button="@drawable/cb_switch"
-                    android:visibility="invisible"></CheckBox>
+                    android:visibility="gone"></CheckBox>
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_back_selector"
+                ></ImageView>
+
             </LinearLayout>
 
             <LinearLayout

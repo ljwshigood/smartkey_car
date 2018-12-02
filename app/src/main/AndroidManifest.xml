@@ -90,7 +90,7 @@
         android:name=".application.AppContext"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher_icon"
+        android:icon="@drawable/ic_alarm_launcher_bak"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data
@@ -273,6 +273,10 @@
                 <action android:name="com.notifications.intent.action" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.zzteck.msafe.service.bluetoothLeService_a"
+            android:enabled="true" >
+        </service>
     </application>
 
 </manifest>
