@@ -101,7 +101,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 
 				String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-				Toast.makeText(getApplicationContext(),"ACTION_GATT_SERVICES_DISCOVERED : "+address,1).show();
+				//Toast.makeText(getApplicationContext(),"ACTION_GATT_SERVICES_DISCOVERED : "+address,1).show();
 				if (mDialogProgress != null) {
 					mDialogProgress.dismiss();
 				}
@@ -112,7 +112,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}
 			}else if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
-				Toast.makeText(getApplicationContext(),"ACTION_GATT_CONNECTED",1).show();
+				//Toast.makeText(getApplicationContext(),"ACTION_GATT_CONNECTED",1).show();
 			}
 		}
 	};
@@ -378,6 +378,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			listData.add(mCategoryDataabase) ;
 			mLeDeviceListAdapter.notifyDataSetChanged();
 		}
+		listData.add(mCategoryScanner) ; //
 	}
 
 	private View mView;
@@ -574,25 +575,30 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 						return ;
 					}
 
-					if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0) {
-						List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
-						boolean isExist = false;
-						for (int i = 0; i < list.size(); i++) {
-							String address = list.get(i).getmDeviceAddress();
-							if (address.equals(device.getAddress())) {
-								isExist = true;
-								break;
-							}
-						}
-						if(!isExist){
-							DeviceSetInfo bean = new DeviceSetInfo() ;
-							bean.setmDeviceAddress(device.getAddress()) ;
-							bean.setmDeviceName(device.getName()) ;
-							mCategoryScanner.addItem(bean) ;
-							mLeDeviceListAdapter.notifyDataSetChanged();
-						}
+					if(device.getName() != null && device.getName().startsWith("FD")){
 
+						if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0) {
+							List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
+							boolean isExist = false;
+							for (int i = 0; i < list.size(); i++) {
+								String address = list.get(i).getmDeviceAddress();
+								if (address.equals(device.getAddress())) {
+									isExist = true;
+									break;
+								}
+							}
+							if(!isExist){
+								DeviceSetInfo bean = new DeviceSetInfo() ;
+								bean.setmDeviceAddress(device.getAddress()) ;
+								bean.setmDeviceName(device.getName()) ;
+								mCategoryScanner.addItem(bean) ;
+								mLeDeviceListAdapter.notifyDataSetChanged();
+							}
+
+						}
 					}
+
+
 
 				}
 			});

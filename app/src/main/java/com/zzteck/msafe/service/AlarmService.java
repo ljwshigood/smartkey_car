@@ -530,10 +530,9 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 			final String action = intent.getAction();
 			mIntent = intent ;
 			String address = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-			//if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
 			if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
 
-				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_DISCONNECTED ",1).show();
+				//Toast.makeText(getApplicationContext(),"##############ACTION_GATT_DISCONNECTED ",1).show();
 
 				EventBus.getDefault().post(new MsgEvent("",5));
 
@@ -549,7 +548,6 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				KeyFunctionUtil.getInstance(mContext).releaseMediaPlayer();
 
 
-			//} else if (BluetoothLeService.ACTION_GATT_RSSI.equals(action)) { // 超距离报警
 			} else if (BluetoothLeService.ACTION_GATT_RSSI.equals(action)) { // 超距离报警
 
 				List<KeySetBean> mListKeySet = DatabaseManager.getInstance(mContext).selectKeySet();
@@ -633,7 +631,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 			} else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 
-				Toast.makeText(getApplicationContext(),"##############ACTION_GATT_SERVICES_DISCOVERED ",1).show();
+				//Toast.makeText(getApplicationContext(),"##############ACTION_GATT_SERVICES_DISCOVERED ",1).show();
 				mHandler.removeCallbacks(mDisconnectRunnable);
 				mAlarmHandler.sendEmptyMessage(0) ;
 				if (AppContext.mBluetoothLeService != null) {
@@ -651,7 +649,6 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				
 				AppContext.mNotificationBean.setShowNotificationDialog(false);
 				
-			//}else if(BluetoothLeService.ACTION_READ_DATA_AVAILABLE.equals(action)){
 			}else if(BluetoothLeService.ACTION_READ_DATA_AVAILABLE.equals(action)){
 				byte[] msg = intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA);
 				if (msg != null) {
