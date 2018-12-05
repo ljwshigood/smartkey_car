@@ -235,7 +235,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	}
 	
 	private boolean isShow = true ;
-	
+
 	Handler mHandlerOneClick = new Handler(){
 
 		@Override
@@ -639,14 +639,14 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 				}
 
 				//DatabaseManager.getInstance(mContext).updateDeviceConnect(address,1);
-				saveDatabaseAndStartActivity(address,"FD-3") ;
+				saveDatabaseAndStartActivity(address,"SmartShot") ;
 
 				dismissBleActivity();
 				Intent intentDistance = new Intent(BgMusicControlService.CTL_ACTION);
 				intentDistance.putExtra("control", 2);
 				intentDistance.putExtra("address", address);
 				sendBroadcast(intentDistance);
-				
+
 				AppContext.mNotificationBean.setShowNotificationDialog(false);
 				
 			}else if(BluetoothLeService.ACTION_READ_DATA_AVAILABLE.equals(action)){

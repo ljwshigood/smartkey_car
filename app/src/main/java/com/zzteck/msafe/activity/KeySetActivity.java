@@ -154,6 +154,8 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 				Manifest.permission.ACCESS_FINE_LOCATION,
 				Manifest.permission.ACCESS_COARSE_LOCATION,
 				Manifest.permission.CAMERA,
+				Manifest.permission.BLUETOOTH,
+				Manifest.permission.BLUETOOTH_ADMIN,
 				Manifest.permission.RECORD_AUDIO,
 				Manifest.permission.BLUETOOTH,
 				Manifest.permission.READ_SMS,

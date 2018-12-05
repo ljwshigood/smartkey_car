@@ -109,7 +109,8 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				mHandler.removeMessages(0);
 
 				if (AppContext.mBluetoothLeService != null) {
-					displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
+					saveDatabaseAndStartActivity();
+					//displayGattServices(AppContext.mBluetoothLeService.getSupportedGattServices(),address);
 				}
 			}else if(BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)){
 				//Toast.makeText(getApplicationContext(),"ACTION_GATT_CONNECTED",1).show();
@@ -562,6 +563,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+					Toast.makeText(mContext,"################device.address() "+device.getAddress(),1).show();
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
 					if(device.getName() == null){
@@ -571,11 +573,15 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 						return ;
 					}
 
+
+
 					if(DatabaseManager.getInstance(mContext).isExistDeviceInfo(device.getAddress())){
 						return ;
 					}
 
-					if(device.getName() != null && device.getName().startsWith("FD")){
+					if(device.getName() != null && device.getName().startsWith("Smart")){
+
+
 
 						if(mCategoryScanner.getmCategoryItem() != null && mCategoryScanner.getmCategoryItem().size() > 0) {
 							List<DeviceSetInfo> list = mCategoryScanner.getmCategoryItem();
@@ -595,6 +601,12 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 								mLeDeviceListAdapter.notifyDataSetChanged();
 							}
 
+						}else{
+							DeviceSetInfo bean = new DeviceSetInfo() ;
+							bean.setmDeviceAddress(device.getAddress()) ;
+							bean.setmDeviceName(device.getName()) ;
+							mCategoryScanner.addItem(bean) ;
+							mLeDeviceListAdapter.notifyDataSetChanged();
 						}
 					}
 
@@ -632,7 +644,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 				mCategoryScanner.getmCategoryItem().clear();
 				mLeDeviceListAdapter.notifyDataSetChanged();
 			}
-
+			listData.add(mCategoryScanner) ;
 			mBluetoothAdapter.startLeScan(mLeScanCallback);
 			break ;
 		case R.id.iv_back:
