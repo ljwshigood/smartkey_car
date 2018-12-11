@@ -563,7 +563,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(mContext,"################device.address() "+device.getAddress(),1).show();
+					Toast.makeText(mContext,"################device.address() "+device.getAddress(),Toast.LENGTH_SHORT).show();
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
 					if(device.getName() == null){
@@ -579,7 +579,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 						return ;
 					}
 
-					if(device.getName() != null && device.getName().startsWith("Smart")){
+					if(device.getName() != null /*&& device.getName().startsWith("Smart")*/){
 
 
 
