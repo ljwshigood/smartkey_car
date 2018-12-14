@@ -407,7 +407,7 @@ public class SelectAppWindow extends PopupWindow implements ISelectApp,IOpenGps 
 					mKeySetBean.setType(0);
 					mKeySetBean.setKeySetDetail(mContext.getString(R.string.alarm));
 					mKeySetBean.setAction(10); // 报警
-					mKeySetBean.setBitmapString(String.valueOf(R.drawable.ic_alarm));
+					mKeySetBean.setBitmapString(String.valueOf(R.drawable.ic_sound));
 					mDatabaseManger.editorKeySet(mKeySetBean);
 					dismiss();
 					mISelectSOSContact.okSelect();
