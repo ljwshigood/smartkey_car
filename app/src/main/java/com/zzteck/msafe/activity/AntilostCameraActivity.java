@@ -340,6 +340,7 @@ public class AntilostCameraActivity extends Activity {
 		if( MyDebug.LOG )
 			Log.d(TAG, "onPause");
         super.onPause();
+        unregisterReceiver(mGattUpdateReceiver);
         mSensorManager.unregisterListener(accelerometerListener);
         mSensorManager.unregisterListener(magneticListener);
         orientationEventListener.disable();

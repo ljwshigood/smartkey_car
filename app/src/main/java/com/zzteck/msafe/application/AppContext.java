@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.os.StrictMode;
 
 import com.baidu.crabsdk.CrabSDK;
 import com.baidu.crabsdk.OnAnrCrashListener;
@@ -134,7 +135,9 @@ public class AppContext extends Application {
 			}
 		});
 
-
+		StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+		StrictMode.setVmPolicy(builder.build());
+		builder.detectFileUriExposure();
 
 	}
 

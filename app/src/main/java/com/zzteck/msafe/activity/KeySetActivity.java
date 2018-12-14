@@ -29,6 +29,7 @@ import com.zzteck.msafe.bean.KeySetBean;
 import com.zzteck.msafe.bean.MsgEvent;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.impl.ComfirmListener;
+import com.zzteck.msafe.location.LocationUtils;
 import com.zzteck.msafe.service.AlarmService;
 import com.zzteck.msafe.service.BgMusicControlService;
 import com.zzteck.msafe.service.BluetoothLeService;
@@ -182,6 +183,9 @@ public class KeySetActivity extends BaseActivity  implements IUpdateUI,IKeyRemov
 
 		Intent intentAlarm = new Intent(mContext, AlarmService.class);
 		startService(intentAlarm);
+
+
+		LocationUtils.getmInstance(this).requestLocation(this);
 
 		mDataBaseManager = DatabaseManager.getInstance(mContext);
 		sortKeySetList();

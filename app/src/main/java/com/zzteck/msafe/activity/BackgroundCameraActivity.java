@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentUris;
@@ -25,6 +26,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -41,6 +43,7 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -51,6 +54,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.telephony.gsm.SmsManager;
@@ -1001,7 +1005,7 @@ public class BackgroundCameraActivity extends Activity implements WebManager.ICo
 					SmsManager smsManager = SmsManager.getDefault();
 					List<String> texts = smsManager.divideMessage(sosBean.getMessage());
 					for(String text:texts){
-						Toast.makeText(mContext, "发送短信", 1).show();
+						//Toast.makeText(mContext, "发送短信", Toast.LENGTH_SHORT).show();
 						smsManager.sendTextMessage(sosBean.getContact(), null, text+mUrl, null, null);
 						timer.cancel();
 					}
@@ -1046,7 +1050,7 @@ public class BackgroundCameraActivity extends Activity implements WebManager.ICo
 		SmsManager smsManager = SmsManager.getDefault();
 		List<String> texts = smsManager.divideMessage(sosBean.getMessage());
 		for(String text:texts){
-			Toast.makeText(mContext, "发送短信", 1).show();
+			//Toast.makeText(mContext, "发送短信", Toast.LENGTH_SHORT).show();
 			smsManager.sendTextMessage(sosBean.getContact(), null, text+url, null, null);
 			timer.cancel();
 		}
@@ -1090,40 +1094,103 @@ public class BackgroundCameraActivity extends Activity implements WebManager.ICo
 	}
 	
 	private Bitmap mBitmap ;
-	
-	public void showButtonNotify(){
-		
-		NotificationCompat.Builder mBuilder = new Builder(this);
+
+
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public void createNotificationChannel() {
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// 通知渠道的id
+		String id = "my_channel_01";
+		// 用户可以看到的通知渠道的名字.
+		CharSequence name = getString(R.string.app_name);
+//         用户可以看到的通知渠道的描述
+		String description = getString(R.string.app_name);
+		int importance = NotificationManager.IMPORTANCE_HIGH;
+		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+//         配置通知渠道的属性
+		mChannel.setDescription(description);
+//         设置通知出现时的闪灯（如果 android 设备支持的话）
+		mChannel.enableLights(true); mChannel.setLightColor(Color.RED);
+//         设置通知出现时的震动（如果 android 设备支持的话）
+		mChannel.enableVibration(true);
+		mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+//         最后在notificationmanager中创建该通知渠道 //
+		mNotificationManager.createNotificationChannel(mChannel);
+
+		// 为该通知设置一个id
+		int notifyID = 1;
+		// 通知渠道的id
+		String CHANNEL_ID = "my_channel_01";
+
 		RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.view_custom_button);
-	
+
 		Intent buttonIntent = new Intent(ACTION_BUTTON);
 
 		buttonIntent.putExtra(INTENT_BUTTONID_TAG, BUTTON_PRIEW_ID);
 
 		PendingIntent intent_prev = PendingIntent.getBroadcast(this, 1, buttonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		mRemoteViews.setOnClickPendingIntent(R.id.ll_notification, intent_prev);
-		
-		if(mBitmap != null && !mBitmap.isRecycled()){
+
+		if (mBitmap != null && !mBitmap.isRecycled()) {
 			mBitmap.recycle();
-			mBitmap = null ;
-			System.gc();		
+			mBitmap = null;
+			System.gc();
 		}
-		
+
 		mBitmap = ImageTools.getBitmapFromFile(mPictureFile.getAbsolutePath(), 2);
-		mRemoteViews.setImageViewBitmap(R.id.iv_notify,mBitmap);
-		
-		mBuilder.setContent(mRemoteViews)
-				.setContentIntent(getDefalutIntent(Notification.FLAG_ONGOING_EVENT))
-				.setWhen(System.currentTimeMillis())
-				.setPriority(Notification.PRIORITY_DEFAULT)
-				.setOngoing(true)
-				.setAutoCancel(true)
-				.setSmallIcon(R.drawable.ic_launcher);
-		
-		Notification notify = mBuilder.build();
-		notify.flags = Notification.FLAG_ONGOING_EVENT;
-		
-		mNotificationManager.notify(200, notify);
+		mRemoteViews.setImageViewBitmap(R.id.iv_notify, mBitmap);
+
+
+		// Create a notification and set the notification channel.
+		Notification notification = new Notification.Builder(this).setCustomContentView(mRemoteViews)
+				//.setContentTitle(mContext.getString(R.string.app_name)) .setContentText("You've received new messages.")
+				.setSmallIcon(R.mipmap.ic_launcher)
+				.setChannelId(CHANNEL_ID)
+				.build();
+
+		mNotificationManager.notify(200, notification);
+	}
+
+
+
+	public void showButtonNotify(){
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createNotificationChannel();
+		}else {
+
+			NotificationCompat.Builder mBuilder = new Builder(this);
+			RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.view_custom_button);
+
+			Intent buttonIntent = new Intent(ACTION_BUTTON);
+
+			buttonIntent.putExtra(INTENT_BUTTONID_TAG, BUTTON_PRIEW_ID);
+
+			PendingIntent intent_prev = PendingIntent.getBroadcast(this, 1, buttonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			mRemoteViews.setOnClickPendingIntent(R.id.ll_notification, intent_prev);
+
+			if (mBitmap != null && !mBitmap.isRecycled()) {
+				mBitmap.recycle();
+				mBitmap = null;
+				System.gc();
+			}
+
+			mBitmap = ImageTools.getBitmapFromFile(mPictureFile.getAbsolutePath(), 2);
+			mRemoteViews.setImageViewBitmap(R.id.iv_notify, mBitmap);
+
+			mBuilder.setContent(mRemoteViews)
+					.setContentIntent(getDefalutIntent(Notification.FLAG_ONGOING_EVENT))
+					.setWhen(System.currentTimeMillis())
+					.setPriority(Notification.PRIORITY_DEFAULT)
+					.setOngoing(true)
+					.setAutoCancel(true)
+					.setSmallIcon(R.drawable.ic_launcher);
+
+			Notification notify = mBuilder.build();
+			notify.flags = Notification.FLAG_ONGOING_EVENT;
+
+			mNotificationManager.notify(200, notify);
+		}
 	}
 	
 

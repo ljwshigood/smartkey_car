@@ -1130,8 +1130,8 @@ public class SosActivity extends FragmentActivity implements ICommit2Web,ITakePi
 				//mRecordManger.saveRecord();
 				//mAudioFile = mRecordManger.getMyRecAudioFile();
 				try {
-					//mUrl = "http://maps.google.com/maps?q="+AppContext.mLatitude+","+AppContext.mLongitude ;
-					mUrl= "" ;
+					mUrl = "http://maps.google.com/maps?q="+AppContext.mLatitude+","+AppContext.mLongitude ;
+					//mUrl= "" ;
 					Log.e("liujw","#############################mUrl "+mUrl);
 					Log.e("liujw","#############################mUrl "+mUrl);
 					Log.e("liujw","#############################mUrl "+mUrl);
@@ -1188,7 +1188,7 @@ public class SosActivity extends FragmentActivity implements ICommit2Web,ITakePi
 		SmsManager smsManager = SmsManager.getDefault();
 		List<String> texts = smsManager.divideMessage(sosBean.getMessage());
 		for(String text:texts){
-			Toast.makeText(mContext, "发送短信", 1).show();
+			//Toast.makeText(mContext, "发送短信", 1).show();
 			smsManager.sendTextMessage(sosBean.getContact(), null, text+url, null, null);
 			timer.cancel();
 		}

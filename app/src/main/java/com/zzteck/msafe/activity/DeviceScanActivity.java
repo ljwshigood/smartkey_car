@@ -551,7 +551,7 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 		mDialogProgress.setCancelable(false);
 		mDialogProgress.show();
 
-		mHandler.sendEmptyMessageDelayed(0,30000) ;
+		mHandler.sendEmptyMessageDelayed(0,10000) ;
 	}
 
 	// Device scan callback.
@@ -563,7 +563,6 @@ public class DeviceScanActivity extends Activity implements OnClickListener ,IDi
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(mContext,"################device.address() "+device.getAddress(),Toast.LENGTH_SHORT).show();
 					mLvBlueDevice.setVisibility(View.VISIBLE);
 					mLLInfo.setVisibility(View.GONE) ;
 					if(device.getName() == null){

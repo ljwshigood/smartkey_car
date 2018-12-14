@@ -256,6 +256,10 @@
             </intent-filter>-->
         </activity>
 
+        <service
+            android:name=".location.FetchAddressIntentService"
+            android:exported="false" />
+
         <service android:name="com.zzteck.msafe.service.BgMusicControlService" >
         </service>
         <service android:name="com.zzteck.msafe.service.ScreenService" >
