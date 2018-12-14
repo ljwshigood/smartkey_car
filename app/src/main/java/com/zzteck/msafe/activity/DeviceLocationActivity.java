@@ -1,7 +1,5 @@
 package com.zzteck.msafe.activity;
 
-import java.util.ArrayList;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.location.Location;
@@ -18,17 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.adapter.LocationDeviceAdapter;
 import com.zzteck.msafe.bean.DeviceSetInfo;
@@ -36,11 +26,12 @@ import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.util.LocationUtils;
 import com.zzteck.msafe.view.FollowInfoDialog;
 
-public class DeviceLocationActivity extends FragmentActivity implements
-		OnItemClickListener, OnClickListener, ConnectionCallbacks,
-		OnConnectionFailedListener, LocationListener, LocationSource {
+import java.util.ArrayList;
 
-	private OnLocationChangedListener mListener;
+public class DeviceLocationActivity extends FragmentActivity implements
+		OnItemClickListener, OnClickListener, LocationListener {
+
+	//private OnLocationChangedListener mListener;
 	private ListView mListView;
 	private TextView btn_find;
 	private boolean showFlag = true;
@@ -51,9 +42,9 @@ public class DeviceLocationActivity extends FragmentActivity implements
 
 	private ArrayList<DeviceSetInfo> mDeviceList = new ArrayList<DeviceSetInfo>();
 
-	private GoogleMap mMap;
+	//private GoogleMap mMap;
 
-	private LocationClient mLocationClient;
+	//private LocationClient mLocationClient;
 	
 	private static final LocationRequest REQUEST = LocationRequest.create()
 			.setInterval(5000) // 5 seconds
@@ -79,7 +70,7 @@ public class DeviceLocationActivity extends FragmentActivity implements
 			dialogLocation.show();
 		}
 		
-		Toast.makeText(mContext, mContext.getString(R.string.find_device_donot_touch), 1).show();
+		Toast.makeText(mContext, mContext.getString(R.string.find_device_donot_touch), Toast.LENGTH_SHORT).show();
 		
 	}
 
@@ -101,7 +92,7 @@ public class DeviceLocationActivity extends FragmentActivity implements
 			mRlMap.setVisibility(View.VISIBLE);
 			setUpMapIfNeeded();
 			setUpLocationClientIfNeeded();
-			mLocationClient.connect();
+			//mLocationClient.connect();
 			initDeviceList();
 		} else {
 			if(mDialog == null){
@@ -112,21 +103,21 @@ public class DeviceLocationActivity extends FragmentActivity implements
 	}
 
 	private void setUpMapIfNeeded() {
-		if (mMap == null) {
+		/*if (mMap == null) {
 			mMap = ((SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map)).getMap();
 			if (mMap != null) {
 				mMap.setMyLocationEnabled(true);
 				//mMap.setOnMyLocationButtonClickListener(this);
 			}
-		}
+		}*/
 	}
 
 	private void setUpLocationClientIfNeeded() {
-		if (mLocationClient == null) {
+		/*if (mLocationClient == null) {
 			mLocationClient = new LocationClient(getApplicationContext(), this, // ConnectionCallbacks
 					this); // OnConnectionFailedListener
-		}
+		}*/
 	}
 
 	@Override
@@ -137,7 +128,7 @@ public class DeviceLocationActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		deactivate();
+	//	deactivate();
 	}
 
 	@Override
@@ -156,12 +147,12 @@ public class DeviceLocationActivity extends FragmentActivity implements
 		if (location != null) {
 			geoLat = location.getLatitude();
 			geoLng = location.getLongitude();
-			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(geoLat),
+			/*mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(geoLat),
 					Double.valueOf(geoLng)), 18f));
 			
 			if (mLocationClient != null) {
 	            mLocationClient.disconnect();
-			}
+			}*/
 
 		}
 	}
@@ -170,19 +161,19 @@ public class DeviceLocationActivity extends FragmentActivity implements
 
 	private Double geoLng = 0.0;
 
-	@Override
+	/*@Override
 	public void activate(OnLocationChangedListener listener) {
 		mListener = listener;
-	}
+	}*/
 
 	/**
 	 * 停止定位
 	 * 
 	 */
-	@Override
+/*	@Override
 	public void deactivate() {
 		mListener = null;
-	}
+	}*/
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
@@ -204,12 +195,12 @@ public class DeviceLocationActivity extends FragmentActivity implements
 			return ;
 		}
 		
-		mMap.setLocationSource(this);
+	/*	mMap.setLocationSource(this);
 		mMap.getUiSettings().setMyLocationButtonEnabled(true);
 		mMap.setMyLocationEnabled(true);
 		mMap.clear();
 		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.valueOf(deviceSetInfo.getLat()),
-				Double.valueOf(deviceSetInfo.getLng())), 18f));
+				Double.valueOf(deviceSetInfo.getLng())), 18f));*/
 
 		showFlag = true;
 		mListView.setVisibility(View.GONE);
@@ -235,7 +226,7 @@ public class DeviceLocationActivity extends FragmentActivity implements
 		return false;
 	}*/
 
-	@Override
+	/*@Override
 	public void onConnectionFailed(ConnectionResult result) {
 
 	}
@@ -248,6 +239,6 @@ public class DeviceLocationActivity extends FragmentActivity implements
 	@Override
 	public void onDisconnected() {
 
-	}
+	}*/
 
 }

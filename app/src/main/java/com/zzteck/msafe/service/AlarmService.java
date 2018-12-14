@@ -2,7 +2,6 @@ package com.zzteck.msafe.service;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager.KeyguardLock;
 import android.app.Notification;
@@ -22,8 +21,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.media.AudioManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -32,19 +29,12 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.activity.AntilostCameraActivity;
-import com.zzteck.msafe.activity.DeviceDisplayActivity;
 import com.zzteck.msafe.activity.KeySetActivity;
 import com.zzteck.msafe.activity.MainFollowActivity;
-import com.zzteck.msafe.activity.RecordActivity;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.DeviceSetInfo;
 import com.zzteck.msafe.bean.DisturbInfo;
@@ -67,9 +57,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AlarmService extends Service implements ConnectionCallbacks,
-													OnConnectionFailedListener,
-													com.google.android.gms.location.LocationListener{
+public class AlarmService extends Service implements com.google.android.gms.location.LocationListener{
 
 	
 	
@@ -937,7 +925,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 		}
 	}
 	
-	private LocationClient mLocationClient;
+//	private LocationClient mLocationClient;
 
     // These settings are the same as the settings for the map. They will in fact give you updates
     // at the maximal rates currently possible.
@@ -947,12 +935,12 @@ public class AlarmService extends Service implements ConnectionCallbacks,
         .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 	 private void setUpLocationClientIfNeeded() {
-	        if (mLocationClient == null) {
+	        /*if (mLocationClient == null) {
 	            mLocationClient = new LocationClient(
 	                    getApplicationContext(),
 	                    this,  // ConnectionCallbacks
 	                    this); // OnConnectionFailedListener
-	        }
+	        }*/
 	    }
 	
 	@Override
@@ -963,7 +951,7 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 
 	}
 
-	@Override
+	/*@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		
 	}
@@ -978,5 +966,5 @@ public class AlarmService extends Service implements ConnectionCallbacks,
 	@Override
 	public void onDisconnected() {
 		
-	}
+	}*/
 }

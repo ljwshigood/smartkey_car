@@ -1,15 +1,6 @@
 package com.zzteck.msafe.activity;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -21,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -47,6 +39,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -66,15 +59,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.zzteck.msafe.R;
 import com.zzteck.msafe.application.AppContext;
 import com.zzteck.msafe.bean.CameraInfo;
@@ -83,15 +68,23 @@ import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.manager.WebManager;
 import com.zzteck.msafe.manager.WebManager.ICommit2Web;
 import com.zzteck.msafe.util.ImageTools;
-import com.zzteck.msafe.util.LocationUtils;
 import com.zzteck.msafe.util.MyDebug;
 import com.zzteck.msafe.util.RecordManager;
-import com.zzteck.msafe.view.FollowInfoDialog;
 import com.zzteck.msafe.view.SOSPreview;
 import com.zzteck.msafe.view.SOSPreview.ITakePictureComplete;
 import com.zzteck.msafe.view.ToastBoxer;
 
-public class SosActivity extends FragmentActivity implements ICommit2Web,ITakePictureComplete{
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class SosActivity extends FragmentActivity implements ICommit2Web, ITakePictureComplete {
 	private static final String TAG = "MainActivity";
 	private SensorManager mSensorManager = null;
 	private Sensor mSensorAccelerometer = null;
@@ -106,179 +99,177 @@ public class SosActivity extends FragmentActivity implements ICommit2Web,ITakePi
 	private boolean supports_force_video_4k = false;
 	private ArrayList<String> save_location_history = new ArrayList<String>();
 	private boolean camera_in_background = false; // whether the camera is covered by a fragment/dialog (such as settings or folder picker)
-    private GestureDetector gestureDetector;
-    private boolean screen_is_locked = false;
-    private Map<Integer, Bitmap> preloaded_bitmap_resources = new Hashtable<Integer, Bitmap>();
+	private GestureDetector gestureDetector;
+	private boolean screen_is_locked = false;
+	private Map<Integer, Bitmap> preloaded_bitmap_resources = new Hashtable<Integer, Bitmap>();
 
-    private ToastBoxer screen_locked_toast = new ToastBoxer();
-    ToastBoxer changed_auto_stabilise_toast = new ToastBoxer();
-    
+	private ToastBoxer screen_locked_toast = new ToastBoxer();
+	ToastBoxer changed_auto_stabilise_toast = new ToastBoxer();
+
 	// for testing:
 	public boolean is_test = false;
 	public Bitmap gallery_bitmap = null;
 
-	
-	private void intentPreview(){
-		Intent intent = new Intent(mContext,ImagePreviewActivity.class);
+
+	private void intentPreview() {
+		Intent intent = new Intent(mContext, ImagePreviewActivity.class);
 		intent.putExtra("filePath", mFileDirPath);
 		mContext.startActivity(intent);
 	}
-	
-	private Context mContext ;
-	
 
-	private void intentSet(){
-		Intent intent = new Intent(mContext,DeviceSetActivity.class);
+	private Context mContext;
+
+
+	private void intentSet() {
+		Intent intent = new Intent(mContext, DeviceSetActivity.class);
 		intent.putExtra("filePath", mFileDirPath);
 		//update
 		intent.putExtra("newversion", newversion);
 		startActivityForResult(intent, 200);
 	}
-	
-	
+
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		if( MyDebug.LOG ) {
+		if (MyDebug.LOG) {
 			Log.d(TAG, "onCreate");
 		}
-    	long time_s = System.currentTimeMillis();
-    	
-    	requestWindowFeature(Window.FEATURE_NO_TITLE); 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    	
+		long time_s = System.currentTimeMillis();
+
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sos);
 		getIntentData();
-		mContext = SosActivity.this ;
-		
-		if(getIntent() != null && getIntent().getExtras() != null ) {
+		mContext = SosActivity.this;
+
+		if (getIntent() != null && getIntent().getExtras() != null) {
 			is_test = getIntent().getExtras().getBoolean("test_project");
-			if( MyDebug.LOG )
+			if (MyDebug.LOG)
 				Log.d(TAG, "is_test: " + is_test);
 		}
-		
+
 		ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		if( MyDebug.LOG ) {
+		if (MyDebug.LOG) {
 			Log.d(TAG, "standard max memory = " + activityManager.getMemoryClass() + "MB");
 			Log.d(TAG, "large max memory = " + activityManager.getLargeMemoryClass() + "MB");
 		}
-		if( activityManager.getLargeMemoryClass() >= 128 ) {
+		if (activityManager.getLargeMemoryClass() >= 128) {
 			supports_auto_stabilise = true;
 		}
-		if( MyDebug.LOG )
+		if (MyDebug.LOG)
 			Log.d(TAG, "supports_auto_stabilise? " + supports_auto_stabilise);
 
 		// hack to rule out phones unlikely to have 4K video, so no point even offering the option!
 		// both S5 and Note 3 have 128MB standard and 512MB large heap (tested via Samsung RTL), as does Galaxy K Zoom
 		// also added the check for having 128MB standard heap, to support modded LG G2, which has 128MB standard, 256MB large - see https://sourceforge.net/p/opencamera/tickets/9/
-		if( activityManager.getMemoryClass() >= 128 || activityManager.getLargeMemoryClass() >= 512 ) {
+		if (activityManager.getMemoryClass() >= 128 || activityManager.getLargeMemoryClass() >= 512) {
 			supports_force_video_4k = true;
 		}
-		if( MyDebug.LOG )
+		if (MyDebug.LOG)
 			Log.d(TAG, "supports_force_video_4k? " + supports_force_video_4k);
 
-        setWindowFlagsForCamera();
+		setWindowFlagsForCamera();
 
-        // read save locations
-        save_location_history.clear();
-        // also update, just in case a new folder has been set
+		// read save locations
+		save_location_history.clear();
+		// also update, just in case a new folder has been set
 		updateFolderHistory();
-        mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-		if( mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null ) {
-			if( MyDebug.LOG )
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+			if (MyDebug.LOG)
 				Log.d(TAG, "found accelerometer");
 			mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		}
-		else {
-			if( MyDebug.LOG )
+		} else {
+			if (MyDebug.LOG)
 				Log.d(TAG, "no support for accelerometer");
 		}
-		if( mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null ) {
-			if( MyDebug.LOG )
+		if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
+			if (MyDebug.LOG)
 				Log.d(TAG, "found magnetic sensor");
 			mSensorMagnetic = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-		}
-		else {
-			if( MyDebug.LOG )
+		} else {
+			if (MyDebug.LOG)
 				Log.d(TAG, "no support for magnetic sensor");
 		}
 
-		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		updateGalleryIcon();
 
 		preview = new SOSPreview(this, savedInstanceState);
 		((ViewGroup) findViewById(R.id.preview)).addView(preview);
-		
+
 		orientationEventListener = new OrientationEventListener(this) {
 			@Override
 			public void onOrientationChanged(int orientation) {
 				SosActivity.this.onOrientationChanged(orientation);
 			}
-        };
-        
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        
-        gestureDetector = new GestureDetector(this, new MyGestureDetector());
-        
-        mDatabaseManager = DatabaseManager.getInstance(mContext);
-        mCameraInfo = mDatabaseManager.selectCameraInfo();
-        
-        WebManager.getInstance(mContext).setmICommit2Web(this);
+		};
+
+		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+		gestureDetector = new GestureDetector(this, new MyGestureDetector());
+
+		mDatabaseManager = DatabaseManager.getInstance(mContext);
+		mCameraInfo = mDatabaseManager.selectCameraInfo();
+
+		WebManager.getInstance(mContext).setmICommit2Web(this);
 		mRecordManger = RecordManager.getInstance(mContext);
 		preview.setmTakePicComplete(this);
-		
+
 		mHandler.sendEmptyMessage(1);
 	}
-	
-	public String ToDBC(String input) {  
-        char[] c = input.toCharArray();  
-        for (int i = 0; i < c.length; i++) {  
-            if (c[i] == 12288) {  
-                c[i] = (char) 32;  
-                continue;  
-            }  
-            if (c[i] > 65280 && c[i] < 65375)  
-                c[i] = (char) (c[i] - 65248);  
-        }  
-        return new String(c);  
-    }  
-	
-	private CameraInfo mCameraInfo ;
-	
-	private RecordManager mRecordManger ;
-	
-	private DatabaseManager mDatabaseManager ;
-	
+
+	public String ToDBC(String input) {
+		char[] c = input.toCharArray();
+		for (int i = 0; i < c.length; i++) {
+			if (c[i] == 12288) {
+				c[i] = (char) 32;
+				continue;
+			}
+			if (c[i] > 65280 && c[i] < 65375)
+				c[i] = (char) (c[i] - 65248);
+		}
+		return new String(c);
+	}
+
+	private CameraInfo mCameraInfo;
+
+	private RecordManager mRecordManger;
+
+	private DatabaseManager mDatabaseManager;
+
 	@Override
 	protected void onDestroy() {
-		if( MyDebug.LOG ) {
+		if (MyDebug.LOG) {
 			Log.d(TAG, "onDestroy");
 			Log.d(TAG, "size of preloaded_bitmap_resources: " + preloaded_bitmap_resources.size());
 		}
-		for(Map.Entry<Integer, Bitmap> entry : preloaded_bitmap_resources.entrySet()) {
-			if( MyDebug.LOG )
+		for (Map.Entry<Integer, Bitmap> entry : preloaded_bitmap_resources.entrySet()) {
+			if (MyDebug.LOG)
 				Log.d(TAG, "recycle: " + entry.getKey());
 			entry.getValue().recycle();
 		}
 		preloaded_bitmap_resources.clear();
-		if(preview != null){
+		if (preview != null) {
 			preview.closeSystemCamera();
 		}
-		
-		AppContext.isStart = true ;
-		if(vibrator != null){
-			vibrator.cancel();	
+
+		AppContext.isStart = true;
+		if (vibrator != null) {
+			vibrator.cancel();
 		}
 		super.onDestroy();
 	}
-	
-	
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;
@@ -294,7 +285,7 @@ public class SosActivity extends FragmentActivity implements ICommit2Web,ITakePi
 			preview.onAccelerometerSensorChanged(event);
 		}
 	};
-	
+
 	private SensorEventListener magneticListener = new SensorEventListener() {
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -305,34 +296,44 @@ public class SosActivity extends FragmentActivity implements ICommit2Web,ITakePi
 			preview.onMagneticSensorChanged(event);
 		}
 	};
-	
-	
+
+
 	private void setupLocationListener() {
-		if( MyDebug.LOG )
+		if (MyDebug.LOG)
 			Log.d(TAG, "setupLocationListener");
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		// Define a listener that responds to location updates
 		boolean store_location = sharedPreferences.getBoolean("preference_location", false);
-		if( store_location && locationListener == null ) {
+		if (store_location && locationListener == null) {
 			locationListener = new LocationListener() {
-			    public void onLocationChanged(Location location) {
-					if( MyDebug.LOG )
+				public void onLocationChanged(Location location) {
+					if (MyDebug.LOG)
 						Log.d(TAG, "onLocationChanged");
-			    	preview.locationChanged(location);
-			    }
+					preview.locationChanged(location);
+				}
 
-			    public void onStatusChanged(String provider, int status, Bundle extras) {
-			    }
+				public void onStatusChanged(String provider, int status, Bundle extras) {
+				}
 
-			    public void onProviderEnabled(String provider) {
-			    }
+				public void onProviderEnabled(String provider) {
+				}
 
-			    public void onProviderDisabled(String provider) {
-			    }
+				public void onProviderDisabled(String provider) {
+				}
 			};
-			
+
 			// see https://sourceforge.net/p/opencamera/tickets/1/
-			if( mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER) ) {
+			if (mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
+				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+					// TODO: Consider calling
+					//    ActivityCompat#requestPermissions
+					// here to request the missing permissions, and then overriding
+					//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+					//                                          int[] grantResults)
+					// to handle the case where the user grants the permission. See the documentation
+					// for ActivityCompat#requestPermissions for more details.
+					return;
+				}
 				mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 			}
 			if( mLocationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER) ) {
