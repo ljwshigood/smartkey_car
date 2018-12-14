@@ -127,12 +127,12 @@ public class AlarmManager {
 
 	public Bitmap getDeviceBitmap(DeviceSetInfo info, Context context) {
 		if (info.getFilePath().equals("null")) {
-			Bitmap bitmap = getRes("ic_default_device", context);
+			Bitmap bitmap = getRes("ic_launcher_icon", context);
 			return ImageTools.toRoundBitmap(bitmap, 180);
 		} else {
 			Bitmap bitmap = ImageTools.getBitmapFromFile(info.getFilePath(), 8);
 			if (bitmap == null) {
-				bitmap = getRes("ic_default_device", context);
+				bitmap = getRes("ic_launcher_icon", context);
 			}
 			return ImageTools.toRoundBitmap(bitmap, 180);
 		}

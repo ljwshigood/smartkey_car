@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class FunctionAdapter extends BaseAdapter {
+public class FunctionAdapter extends BaseAdapter implements OnItemClickListener{
 
 	private Context mContext;
 
@@ -62,7 +62,7 @@ public class FunctionAdapter extends BaseAdapter {
 		viewHolder.mIvIcon.setImageResource(mRes[position]);
 		viewHolder.mTvInfo.setText(info[position]);
 
-		viewHolder.mIvIcon.setOnClickListener(new View.OnClickListener() {
+		/*viewHolder.mIvIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 
@@ -72,7 +72,7 @@ public class FunctionAdapter extends BaseAdapter {
 
 
 			}
-		});
+		});*/
 
 		return convertView;
 	}
@@ -86,6 +86,13 @@ public class FunctionAdapter extends BaseAdapter {
 	}
 
 	private IIconClickListener mIIconClickListener ;
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+		if(mIIconClickListener != null){
+			mIIconClickListener.iconClickListener(position);
+		}
+	}
 
 	public interface  IIconClickListener{
 		public void iconClickListener(int position) ;

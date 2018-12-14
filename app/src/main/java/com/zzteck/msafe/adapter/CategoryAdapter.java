@@ -180,8 +180,8 @@ public class CategoryAdapter extends BaseAdapter {
 
                 DeviceSetInfo info = new DeviceSetInfo();
                 info.setFilePath("null");
-                Bitmap circleBitmap = AlarmManager.getInstance(mContext).getDeviceBitmap(info, mContext);
-                viewHolder.contentIcon.setImageBitmap(circleBitmap);
+              //  Bitmap circleBitmap = AlarmManager.getInstance(mContext).getDeviceBitmap(info, mContext);
+                viewHolder.contentIcon.setBackgroundResource(R.drawable.ic_launcher_icon);
 
                 break;
         }

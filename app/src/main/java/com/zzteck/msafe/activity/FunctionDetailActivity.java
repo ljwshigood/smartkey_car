@@ -65,7 +65,7 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 
 	private int[] res = new int[] { R.drawable.camera,R.drawable.ic_sos_press,
 			R.drawable.ic_light_press, R.drawable.ic_call_press,R.drawable.ic_open_app_press,
-			R.drawable.ic_speed ,R.drawable.ic_alarm,R.drawable.ic_anti_call};
+			R.drawable.ic_speed ,R.drawable.ic_sound,R.drawable.ic_anti_call};
 
 	private String[] info = null;
 
@@ -81,6 +81,7 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 
 		mFunctionAdapter = new FunctionAdapter(mContext, res, info);
 		mGvFunction.setAdapter(mFunctionAdapter);
+		mGvFunction.setOnItemClickListener(mFunctionAdapter) ;
 		mFunctionAdapter.setmIIconClickListener(new FunctionAdapter.IIconClickListener() {
 			@Override
 			public void iconClickListener(int position) {
@@ -141,7 +142,7 @@ public class FunctionDetailActivity extends BaseActivity implements OnClickListe
 
 	private void initView() {
 		
-		mTvHintInfo = (TextView)findViewById(R.id.tv_title_info);
+		mTvHintInfo = findViewById(R.id.tv_title_info);
 		mTvHintInfo.setText(mContext.getString(R.string.app_name));
 		mGvFunction = (GridView) findViewById(R.id.gv_function);
 		mIvBack = (ImageView) findViewById(R.id.iv_back);
