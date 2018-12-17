@@ -83,6 +83,7 @@ import com.zzteck.msafe.bean.CameraInfo;
 import com.zzteck.msafe.bean.SosBean;
 import com.zzteck.msafe.db.DatabaseManager;
 import com.zzteck.msafe.manager.WebManager;
+import com.zzteck.msafe.recevier.ButtonBroadcastReceiver;
 import com.zzteck.msafe.util.ImageTools;
 import com.zzteck.msafe.util.KeyFunctionUtil;
 import com.zzteck.msafe.util.RecordManager;
@@ -1124,12 +1125,15 @@ public class BackgroundCameraActivity extends Activity implements WebManager.ICo
 
 		RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.view_custom_button);
 
-		Intent buttonIntent = new Intent(ACTION_BUTTON);
+		Intent intent = new Intent (this,ButtonBroadcastReceiver.class);
+		intent.setAction(ACTION_BUTTON) ;
+		intent.putExtra(INTENT_BUTTONID_TAG, BUTTON_PRIEW_ID);
 
-		buttonIntent.putExtra(INTENT_BUTTONID_TAG, BUTTON_PRIEW_ID);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-		PendingIntent intent_prev = PendingIntent.getBroadcast(this, 1, buttonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		mRemoteViews.setOnClickPendingIntent(R.id.ll_notification, intent_prev);
+		//Intent buttonIntent = new Intent(ACTION_BUTTON);
+		//PendingIntent intent_prev = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		//mRemoteViews.setOnClickPendingIntent(R.id.ll_notification, intent_prev);
 
 		if (mBitmap != null && !mBitmap.isRecycled()) {
 			mBitmap.recycle();
@@ -1146,6 +1150,7 @@ public class BackgroundCameraActivity extends Activity implements WebManager.ICo
 				//.setContentTitle(mContext.getString(R.string.app_name)) .setContentText("You've received new messages.")
 				.setSmallIcon(R.mipmap.ic_launcher)
 				.setChannelId(CHANNEL_ID)
+				.setContentIntent(pendingIntent)
 				.build();
 
 		mNotificationManager.notify(200, notification);
