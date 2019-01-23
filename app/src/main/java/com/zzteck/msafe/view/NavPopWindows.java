@@ -110,13 +110,13 @@ public class NavPopWindows extends PopupWindow implements View.OnClickListener{
 				break ;
 			case R.id.ll_about_me :
 
-				intent = new Intent(BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE) ;
+				/*intent = new Intent(BluetoothLeService.ACTION_NOTIFY_DATA_AVAILABLE) ;
 				intent.putExtra(BluetoothLeService.EXTRA_DATA,"E3 07 A1 01 01 A8 E5") ;
-				mContext.sendBroadcast(intent);
+				mContext.sendBroadcast(intent);*/
 
-				/*intent = new Intent(mContext, AboutMeActivity.class) ;
+				intent = new Intent(mContext, AboutMeActivity.class) ;
 				mContext.startActivity(intent) ;
-*/
+
 				break ;
 			case R.id.ll_feedback :
 				intent = new Intent(mContext, FeedBackActivity.class) ;

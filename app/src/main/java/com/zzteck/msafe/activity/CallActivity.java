@@ -168,7 +168,8 @@ public class CallActivity extends Activity implements OnClickListener,IJieTingCa
         animationDrawable1.start(); 
         
 	}
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -214,6 +215,12 @@ public class CallActivity extends Activity implements OnClickListener,IJieTingCa
 		}
 		
 		mSliderRelativeLayout.setmMiddleWidth(mMiddleWidth);
+
+		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+		vibrator.vibrate(200);
+
+		vibrator.vibrate(new long[]{200,400,600,800},0) ;
 		
 		playerDefaultRing();
 		
@@ -226,6 +233,10 @@ public class CallActivity extends Activity implements OnClickListener,IJieTingCa
 		closeRing() ;
 		if(wakeLock != null){
 			wakeLock.release();  
+		}
+		if(vibrator != null){
+			vibrator.cancel();
+			vibrator = null ;
 		}
 		//mScreenObserver.stopScreenStateUpdate();
 		//keyguardLock.reenableKeyguard();

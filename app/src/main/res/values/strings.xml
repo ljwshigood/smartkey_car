@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="action_acceleration_ing">decreasing</string>
+    <string name="action_acceleration_msg">Completing boost,decreased by %1$d%%</string>
     <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
     <string name="no_geocoder_available">No geocoder available</string>
     <string name="address_found">Address found</string>
@@ -8,7 +9,6 @@
     <string name="no_location_data_provided">No location data provided</string>
     <string name="service_not_available">Sorry, the service is not available</string>
     <string name="action_acceleration_description">Lagging when playing games and watching movies?Try Boosting!</string>
-    <string name="action_acceleration_msg">Completing boost</string>
     <string name="action_acceleration_msg_starting">Releasing memory…</string>
     <string name="action_acceleration_msg_finish">Boost complete, optimal state</string>
 

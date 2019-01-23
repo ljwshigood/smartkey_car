@@ -1,10 +1,17 @@
 package com.zzteck.msafe.util;
 
 import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.zzteck.msafe.service.ClearService;
+
+import java.lang.reflect.Method;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -13,9 +20,14 @@ import java.util.List;
 
 public class Utils {
 
+
+
+
     public static String oneSpeed(Context context) {
+
+
         //To change body of implemented methods use File | Settings | File Templates.
-        ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> infoList = am.getRunningAppProcesses();
         List<ActivityManager.RunningServiceInfo> serviceInfos = am.getRunningServices(100);
 
@@ -30,9 +42,14 @@ public class Utils {
                 // 一般数值大于RunningAppProcessInfo.IMPORTANCE_VISIBLE的进程都是非可见进程，也就是在后台运行着
                 if (appProcessInfo.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
                     String[] pkgList = appProcessInfo.pkgList;
-                    for (int j = 0; j < pkgList.length; ++j) {//pkgList 得到该进程下运行的包名
-                        am.killBackgroundProcesses(pkgList[j]);
-                        count++;
+                    for (int j = 0; j < pkgList.length; j++) {//pkgList 得到该进程下运行的包名
+
+                        Log.e("liujw", "######################pkgList : " + pkgList[j]);
+                        if (!pkgList[j].equals("com.zzteck.msafe")) {
+                            am.killBackgroundProcesses(pkgList[j]);
+                            count++;
+                        }
+
                     }
                 }
 
@@ -41,7 +58,7 @@ public class Utils {
 
         long afterMem = getAvailMemory(context);
 
-        return  "clear " + count + " process, "  + (afterMem - beforeMem) + "M" ;
+        return "clear " + count + " process, " + (afterMem - beforeMem) + "M";
     }
 
     //获取可用内存大小
