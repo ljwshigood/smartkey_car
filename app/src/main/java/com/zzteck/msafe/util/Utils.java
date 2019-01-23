@@ -4,6 +4,9 @@ import android.app.ActivityManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,6 +23,8 @@ import java.util.List;
 
 public class Utils {
 
+    private static void getAppList(Context context) {
+    }
 
 
 
@@ -31,8 +36,22 @@ public class Utils {
         List<ActivityManager.RunningAppProcessInfo> infoList = am.getRunningAppProcesses();
         List<ActivityManager.RunningServiceInfo> serviceInfos = am.getRunningServices(100);
 
+
         long beforeMem = getAvailMemory(context);
         int count = 0;
+
+       /* PackageManager pm = context.getPackageManager();
+
+        List<PackageInfo> packages = pm.getInstalledPackages(0);
+        for (PackageInfo packageInfo : packages) {
+            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0){
+                am.killBackgroundProcesses(packageInfo.packageName);
+                Log.e("liujw", "######################PackageInfo : " + packageInfo.packageName);
+                //System.out.println("MainActivity.getAppList, packageInfo=" + packageInfo.packageName);
+            }
+        }*/
+
+
         if (infoList != null) {
             for (int i = 0; i < infoList.size(); ++i) {
                 ActivityManager.RunningAppProcessInfo appProcessInfo = infoList.get(i);
