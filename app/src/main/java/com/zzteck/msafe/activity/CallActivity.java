@@ -159,11 +159,11 @@ public class CallActivity extends Activity implements OnClickListener,IJieTingCa
 	private void initImageView(){
 		mIvJieTing = (ImageView)findViewById(R.id.iv_jieting_call);
 		mIvCancel = (ImageView)findViewById(R.id.iv_cancel_call);
-		mIvCancel.setImageResource(R.anim.ic_jieting_call_anim);  
+		mIvCancel.setImageResource(R.drawable.ic_jieting_call_anim);
 		AnimationDrawable  animationDrawable = (AnimationDrawable) mIvCancel.getDrawable();  
         animationDrawable.start();  
         
-        mIvJieTing.setImageResource(R.anim.ic_cancel_call_anim);  
+        mIvJieTing.setImageResource(R.drawable.ic_cancel_call_anim);
 		AnimationDrawable  animationDrawable1 = (AnimationDrawable) mIvJieTing.getDrawable();  
         animationDrawable1.start(); 
         

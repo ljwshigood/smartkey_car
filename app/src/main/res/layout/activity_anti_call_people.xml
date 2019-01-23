@@ -110,14 +110,14 @@
                     android:id="@+id/iv_jieting_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@anim/ic_cancel_call_anim" />
+                    android:background="@drawable/ic_cancel_call_anim" />
 
                 <ImageView
                     android:id="@+id/iv_cancel_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:src="@anim/ic_jieting_call_anim" />
+                    android:src="@drawable/ic_jieting_call_anim" />
             </LinearLayout>
 
             <TextView
